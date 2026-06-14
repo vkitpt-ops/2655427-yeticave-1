@@ -62,9 +62,9 @@
                 </div>
 
                 <?php if (
-                        $auth_user['id'] != null &&
-                        $auth_user['id'] != $lot['author_id'] &&
-                        ($last_bid['user_id'] ?? null) != $auth_user['id']
+                    $auth_user['id'] != null &&
+                    $auth_user['id'] != ($lot['author_id'] ?? null) &&
+                    ($last_bid['user_id'] ?? null) != $auth_user['id']
                 ): ?>
 
                     <form class="lot-item__form"
@@ -95,7 +95,7 @@
                         <tr class="history__item">
                             <td class="history__name"><?= $bid['user_name'] ?></td>
                             <td class="history__price"><?= $bid['amount'] ?> р</td>
-                            <td class="history__time"><?= $bid['created_at'] ?></td>
+                            <td class="history__time"><?= time_ago($bid['created_at']) ?></td>
                         </tr>
                     <?php endforeach; ?>
 

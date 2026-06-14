@@ -31,7 +31,7 @@
         <h2>Все лоты в категории <span>«<?= $category_name['name'] ?>»</span></h2>
         <ul class="lots__list">
 
-            <?php foreach($category_lots as $lot): ?>
+            <?php foreach ($category_lots as $lot): ?>
                 <?= include_template('_partials/lot-cards.php', compact('lot')) ?>
             <?php endforeach; ?>
 

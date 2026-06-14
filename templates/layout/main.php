@@ -23,7 +23,7 @@ $search_value = $search_value ?? '';
 <body>
     <div class="page-wrapper">
 
-        <?= include_template('layout/_header.php',compact('auth_user', 'search_value')) ?>
+        <?= include_template('layout/_header.php', compact('auth_user', 'search_value')) ?>
 
         <main><?= $page_content ?></main>
     </div>

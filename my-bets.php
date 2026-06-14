@@ -2,15 +2,16 @@
 
 declare(strict_types=1);
 
-require_once 'init.php';
+require_once __DIR__ . '/init.php';
 
-/** @var mysqli $con */
+use enum\HttpStatusCodeEnum;
+
+/** @var mysqli $connection */
 /** @var array $auth_user */
 /** @var array $categories */
 
-$bids = getBidsByUserId($con, $auth_user['id']);
-$winner_bid = getWinnerBidIds($con, $auth_user['id']);
-
+$bids = getBidsByUserId($connection, $auth_user['id']);
+$winner_bid = getWinnerBidIds($connection, $auth_user['id']);
 
 $page_content = include_template('my-bets.php', compact(
     'auth_user',

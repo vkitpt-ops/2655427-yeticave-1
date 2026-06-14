@@ -25,23 +25,27 @@
 <section class="rates container">
     <h2>Мои ставки</h2>
     <table class="rates__list">
-        <?php foreach($bids as $bid): ?>
+        <?php foreach ($bids as $bid): ?>
             <tr class="rates__item">
                 <td class="rates__info">
                     <div class="rates__img">
-                        <img src="<?= $bid['img_url'] ?>" width="54" height="40" alt="Сноуборд">
+                        <img
+                            src="<?= esc($bid['img_url'] ?? '') ?>"
+                            width="54" height="40"
+                            alt="<?= esc($bid['category_name'] ?? '') ?>"
+                        >
                     </div>
                     <h3 class="rates__title">
                         <a href="lot.php?id=<?= esc($bid['lot_id'] ?? '') ?>"><?= esc($bid['title'] ?? '') ?></a>
 
                         <?php if (in_array($bid['id'], $winner_bid)):?>
-                            <p><?= $bid['contact_info'] ?></p>
+                            <p><?= esc($bid['contact_info'] ?? '') ?></p>
                         <?php endif; ?>
 
                     </h3>
                 </td>
                 <td class="rates__category">
-                    <?=  $bid['category_name'] ?>
+                    <?= esc($bid['category_name'] ?? '') ?>
                 </td>
                 <td class="rates__timer">
 
@@ -64,7 +68,7 @@
                     <?= $bid['amount'] ?>
                 </td>
                 <td class="rates__time">
-                    <?= $bid['created_at'] ?>
+                    <?= time_ago($bid['created_at']) ?>
                 </td>
             </tr>
         <?php endforeach; ?>

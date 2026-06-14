@@ -11,8 +11,6 @@ declare(strict_types=1);
  * @return void
  */
 function processLotImage(array &$errors, array &$data): void {
-    define('LOT_IMAGE_FIELD', 'lot-img');
-
     if (empty($_FILES[LOT_IMAGE_FIELD]['name'])) {
         $errors[LOT_IMAGE_FIELD] = "Вы не загрузили файл";
         return;

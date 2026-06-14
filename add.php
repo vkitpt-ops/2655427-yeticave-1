@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-require_once 'init.php';
+require_once __DIR__ . '/init.php';
 
 use enum\HttpMethodEnum;
 use enum\HttpStatusCodeEnum;
 
-/** @var mysqli $con */
+/** @var mysqli $connection */
 /** @var array $auth_user */
 /** @var array  $categories */
 
@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === HttpMethodEnum::POST->value) {
 
     if (empty($errors)) {
         $data = prepareLotData($form_data, $auth_user['id']);
-        $lot_id = addLot($con, $data);
+        $lot_id = addLot($connection, $data);
 
         if ($lot_id) {
             header("Location: lot.php?id=" . $lot_id);
