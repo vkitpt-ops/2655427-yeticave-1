@@ -8,67 +8,67 @@ const ADD_BID_FORM_KEY = 'lot';
 const LOGIN_FORM_KEY = 'login';
 
 const VALIDATION_RULES = [
-    ADD_LOT_FORM_KEY  => [
-        'category'    => [
+    ADD_LOT_FORM_KEY => [
+        'category' => [
             'required',
             'category'
         ],
-        'lot-name'    => [
+        'lot-name' => [
             'required',
             'string:min=5&max=255'
         ],
-        'message'     => [
+        'message' => [
             'required',
             'string:min=5'
         ],
-        'lot-rate'    => [
+        'lot-rate' => [
             'required',
             'int:min=1'
         ],
-        'lot-step'    => [
+        'lot-step' => [
             'required',
             'int:min=1'
         ],
-        'lot-date'    => [
+        'lot-date' => [
             'required',
             'date:format=Y-m-d&gt=today'
         ]
     ],
-    SIGN_UP_FORM_KEY  => [
-        'email'       => [
+    SIGN_UP_FORM_KEY => [
+        'email' => [
             'required',
             'string:min=4&max=128',
             'email',
             'unique_email'
         ],
-        'name'        => [
+        'name' => [
             'required',
             'string:min=4&max=128',
             'name:filter'
         ],
-        'password'    => [
+        'password' => [
             'required',
             'string:min=8&max=255',
             'password'
         ],
-        'message'     => [
+        'message' => [
             'required',
             'string:min=5'
         ]
     ],
-    LOGIN_FORM_KEY    => [
-        'email'       => [
+    LOGIN_FORM_KEY => [
+        'email' => [
             'required',
             'email',
             'user_exists'
         ],
-        'password'    => [
+        'password' => [
             'required',
             'password_match'
         ]
     ],
-    ADD_BID_FORM_KEY  => [
-        'cost'        =>[
+    ADD_BID_FORM_KEY => [
+        'cost' => [
             'required',
             'int'
         ]

@@ -2,24 +2,24 @@
 
 declare(strict_types=1);
 
-require_once 'init.php';
+require_once __DIR__ . '/init.php';
 
 use enum\HttpStatusCodeEnum;
 use enum\HttpMethodEnum;
 
-/** @var mysqli $con */
+/** @var mysqli $connection */
 /** @var array $auth_user */
 /** @var array $categories */
 
 $lot_id = intval(filter_input(INPUT_GET, 'id'));
-$lot = getLotById($con, $lot_id);
+$lot = getLotById($connection, $lot_id);
 
 if (!$lot) {
     http_response_code(HttpStatusCodeEnum::HttpNotFound->value);
     exit();
 }
 
-$bids = getBidsByLotId($con, $lot_id);
+$bids = getBidsByLotId($connection, $lot_id);
 $min_bid = $lot['current_price'] + $lot['bid_step'] ?? 0;
 $last_bid = $bids[0] ?? null;
 
@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === HttpMethodEnum::POST->value) {
 
     if (empty($errors)) {
         $data = prepareBidData($auth_user['id'], $lot_id, $form_data);
-        $bid = addBid($con, $data);
+        $bid = addBid($connection, $data);
 
         if ($bid) {
             header("Location: /lot.php?id=" . $lot_id);

@@ -9,8 +9,13 @@ declare(strict_types=1);
  *
  * @return array
  */
-function getAllCategories(mysqli $connection): array {
-    $sql = "SELECT `id`, `name`, `slug` FROM category";
+function getAllCategories(mysqli $connection): array
+{
+    $sql = "SELECT
+        id,
+        name,
+        slug
+    FROM `category`";
 
     return fetchAll($connection, $sql);
 }
@@ -23,13 +28,14 @@ function getAllCategories(mysqli $connection): array {
  *
  * @return array
  */
-function getCategoryName(mysqli $connection, ?string $category_slug): array {
+function getCategoryName(mysqli $connection, ?string $category_slug): array
+{
     $category_slug = mysqli_real_escape_string($connection, (string)$category_slug);
 
     $sql = "SELECT
         name
     FROM `category`
-    WHERE slug = '$category_slug'";
+    WHERE slug = ?";
 
-    return fetchOne($connection, $sql);
+    return fetchOne($connection, $sql, 's', [$category_slug]);
 }

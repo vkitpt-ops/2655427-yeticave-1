@@ -13,7 +13,8 @@ declare(strict_types=1);
  *
  * @return void
  */
-function validateFormData(array $rules, array $form_data, array &$errors, ?array $allowed_list = []): void {
+function validateFormData(array $rules, array $form_data, array &$errors, ?array $allowed_list = []): void
+{
 
     foreach ($rules as $field => $validators) {
 
@@ -38,7 +39,8 @@ function validateFormData(array $rules, array $form_data, array &$errors, ?array
  *
  * @return array
  */
-function parseValidatorParams(string $params_string): array {
+function parseValidatorParams(string $params_string): array
+{
     $params = [];
 
     $pairs = explode(VALIDATOR_PARAMS_SEPARATOR, $params_string);
@@ -66,7 +68,8 @@ function parseValidatorParams(string $params_string): array {
  *
  * @return string|null
  */
-function validateByRule(string $rule, string $value, ?array $allowed_list, array $form_data): ?string {
+function validateByRule(string $rule, string $value, ?array $allowed_list, array $form_data): ?string
+{
 
     $parts = explode(VALIDATOR_SEPARATOR, $rule);
 
@@ -75,7 +78,7 @@ function validateByRule(string $rule, string $value, ?array $allowed_list, array
     $params_string = $parts[1] ?? '';
     $params = [];
 
-    if ($params_string !== ''){
+    if ($params_string !== '') {
         $params = parseValidatorParams($params_string);
     }
 

@@ -35,7 +35,7 @@
 
         <ul class="lots__list">
 
-            <?php foreach($found_lots as $lot): ?>
+            <?php foreach ($found_lots as $lot): ?>
                 <?= include_template('_partials/lot-cards.php', compact('lot')) ?>
             <?php endforeach; ?>
 

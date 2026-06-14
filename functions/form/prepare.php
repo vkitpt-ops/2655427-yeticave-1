@@ -6,11 +6,12 @@ declare(strict_types=1);
  * Prepared data for filling in the form fields when adding a new lot
  *
  * @param array $form_data
- * @param int $user_id ID of the registered user
+ * @param int   $user_id ID of the registered user
  *
  * @return array
  */
-function prepareLotData(array $form_data, int $user_id): array {
+function prepareLotData(array $form_data, int $user_id): array
+{
     return [
         $form_data['lot-name'],
         $form_data['message'],
@@ -30,7 +31,8 @@ function prepareLotData(array $form_data, int $user_id): array {
  *
  * @return array
  */
-function prepareUserData(array $form_data): array {
+function prepareUserData(array $form_data): array
+{
     return [
         $form_data['email'],
         $form_data['name'],
@@ -48,7 +50,8 @@ function prepareUserData(array $form_data): array {
  *
  * @return array
  */
-function prepareBidData(int $user_id, int $lot_id, array $form_data): array {
+function prepareBidData(int $user_id, int $lot_id, array $form_data): array
+{
     return [
         $form_data['cost'],
         $user_id,

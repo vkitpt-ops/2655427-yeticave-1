@@ -9,7 +9,8 @@ declare(strict_types=1);
  *
  * @return string|null Error message or null
  */
-function checkingEmptyField(string $value): ?string {
+function checkingEmptyField(string $value): ?string
+{
     if ($value === '') {
         return 'Заполните поле';
     }
@@ -23,7 +24,8 @@ function checkingEmptyField(string $value): ?string {
  *
  * @return string|null Error message or null
  */
-function validatePositiveInt(string $value, array $params): ?string {
+function validatePositiveInt(string $value, array $params): ?string
+{
     if (!preg_match('/^[1-9]\d*$/', $value)) {
         return "Введите целое значение больше нуля";
     }
@@ -44,7 +46,8 @@ function validatePositiveInt(string $value, array $params): ?string {
  *
  * @return string|null Validation error message or null if validation passes
  */
-function validateText(string $value, array $params): ?string {
+function validateText(string $value, array $params): ?string
+{
     $max_characters = (int)($params['max'] ?? 0);
     $min_characters = (int)($params['min'] ?? 0);
     $string_length = mb_strlen($value);
@@ -67,7 +70,8 @@ function validateText(string $value, array $params): ?string {
  *
  * @return string|null Error message or null
  */
-function validateDate(string $date, array $params): ?string {
+function validateDate(string $date, array $params): ?string
+{
     $format = $params['format'] ?? 'Y-m-d';
     $day = $params['gt'] ?? null;
 
@@ -98,7 +102,8 @@ function validateDate(string $date, array $params): ?string {
  *
  * @return string|null Error message or null
  */
-function validateCategory(string $category, array $allowed_list): ?string {
+function validateCategory(string $category, array $allowed_list): ?string
+{
     $id = (int)$category;
 
     if (!in_array($id, $allowed_list)) {
@@ -114,7 +119,8 @@ function validateCategory(string $category, array $allowed_list): ?string {
  *
  * @return string|null Error message or null
  */
-function validateUniqueEmail(?array $users_by_email): ?string {
+function validateUniqueEmail(?array $users_by_email): ?string
+{
     if ($users_by_email) {
         return "Указанный email уже используется другим пользователем";
     }
@@ -128,7 +134,8 @@ function validateUniqueEmail(?array $users_by_email): ?string {
  *
  * @return string|null Error message or null
  */
-function validateEmailFormat(string $email): ?string {
+function validateEmailFormat(string $email): ?string
+{
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         return "Некорректный email";
     }
@@ -142,7 +149,8 @@ function validateEmailFormat(string $email): ?string {
  *
  * @return string|null Error message or null
  */
-function validatePassword(string $password): ?string {
+function validatePassword(string $password): ?string
+{
     if (!preg_match("/^[a-zA-Z\d]+$/", $password)) {
         return "Разрешены только буквы и цифры";
     }
@@ -168,7 +176,8 @@ function validatePassword(string $password): ?string {
  *
  * @return string|null Error message or null
  */
-function validateName(string $name): ?string {
+function validateName(string $name): ?string
+{
     if (!preg_match("/^[\p{L}\- ]+$/u", $name)) {
         return "Некорректное имя пользователя";
     }
@@ -182,7 +191,8 @@ function validateName(string $name): ?string {
  *
  * @return string|null Error message or null
  */
-function validateUserExists(?array $user): ?string {
+function validateUserExists(?array $user): ?string
+{
     if ($user === null) {
         return "Пользователя с таким email не существует";
     }
@@ -197,7 +207,8 @@ function validateUserExists(?array $user): ?string {
  *
  * @return string|null Error message or null
  */
-function validateUserPassword(?array $user, array $form_data): ?string {
+function validateUserPassword(?array $user, array $form_data): ?string
+{
     if (isset($user)) {
         if (!password_verify($form_data[PASSWORD_FIELD], $user['password_hash'])) {
             return "Указан неверный пароль";

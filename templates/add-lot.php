@@ -45,7 +45,7 @@
             <select id="category" name="category">
                 <option value="">Выберите категорию</option>
 
-                <?php foreach($categories as $category): ?>
+                <?php foreach ($categories as $category): ?>
                     <option value="<?= $category['id'] ?>"><?= esc($category['name']) ?></option>
                 <?php endforeach; ?>
 
@@ -58,9 +58,7 @@
         <textarea
             id="message"
             name="message"
-            placeholder="Напишите описание лота">
-            <?= htmlspecialchars($form_data['message'] ?? ''); ?>
-        </textarea>
+            placeholder="Напишите описание лота"><?=htmlspecialchars($form_data['message'] ?? '') ?></textarea>
         <span class="form__error"><?= $errors['message'] ?></span>
     </div>
     <div class="form__item form__item--file <?= isset($errors['lot-img']) ? "form__item--invalid" : '' ?>">

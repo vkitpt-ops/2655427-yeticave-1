@@ -7,55 +7,86 @@ declare(strict_types=1);
  *
  * @return mysqli
  */
-function connectToMySQL(): mysqli {
-    $db = require 'config/db.php';
+function connectToMySQL(): mysqli
+{
+    $mysql = require __DIR__ . '/../../config/db.php';
 
-    $con = mysqli_connect(
-        $db['host'],
-        $db['user'],
-        $db['password'],
-        $db['database']
+    $connection = mysqli_connect(
+        $mysql['host'],
+        $mysql['user'],
+        $mysql['password'],
+        $mysql['database']
     );
 
-    if (!$con) {
+    if (!$connection) {
         exit('Ошибка подключения: ' . mysqli_connect_error());
     }
 
-    mysqli_set_charset($con, 'utf8mb4');
+    mysqli_set_charset($connection, 'utf8mb4');
 
-    return $con;
+    return $connection;
 }
 
 /**
- * Executes an SQL query and returns all result rows
+ * Executes a SELECT query safely and returns all rows
  *
- * @param mysqli $con
- * @param string $sql_query
+ * @param mysqli $connection Active database connection
+ * @param string $sql
+ *
  * @return array
  */
-function fetchAll(mysqli $con, string $sql_query): array {
-    $result = mysqli_query($con, $sql_query);
+function fetchAll(mysqli $connection, string $sql, string $types = '', array $params = []): array
+{
+    $stmt = mysqli_prepare($connection, $sql);
 
-    if (!$result) {
-        error_log(mysqli_error($con));
+    if (!$stmt) {
+        error_log(mysqli_error($connection));
         return [];
     }
+
+    if ($params) {
+        mysqli_stmt_bind_param($stmt, $types, ...$params);
+    }
+
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+
+    if (!$result) {
+        error_log(mysqli_error($connection));
+        return [];
+    }
+
     return mysqli_fetch_all($result, MYSQLI_ASSOC);
 }
 
 /**
- * Executes an SQL query and returns a single result row
+ * Executes a SELECT query safely and returns one row
  *
- * @param mysqli $con
- * @param string $sql_query
+ * @param mysqli $connection Active database connection
+ * @param string $sql
+ *
  * @return array|null
  */
-function fetchOne(mysqli $con, string $sql_query): array|null {
-    $result = mysqli_query($con, $sql_query);
+function fetchOne(mysqli $connection, string $sql, string $types = '', array $params = []): ?array
+{
+    $stmt = mysqli_prepare($connection, $sql);
 
-    if (!$result) {
-        error_log(mysqli_error($con));
+    if (!$stmt) {
+        error_log(mysqli_error($connection));
         return null;
     }
-    return mysqli_fetch_assoc($result);
+
+    if ($params) {
+        mysqli_stmt_bind_param($stmt, $types, ...$params);
+    }
+
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+
+    if (!$result) {
+        error_log(mysqli_error($connection));
+        return null;
+    }
+
+    return mysqli_fetch_assoc($result) ?: null;
 }

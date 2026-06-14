@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-require_once 'init.php';
+require_once __DIR__ . '/init.php';
+require_once __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . '/getwinner.php';
 
-assignWinnerBids($con);
-
-/** @var mysqli $con */
+/** @var mysqli $connection */
 /** @var array $auth_user */
 /** @var array  $categories */
 
-$lots = getNewLots($con);
+$lots = getNewLots($connection);
 
 $page_content = include_template('index.php', compact(
     'categories',

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-require_once 'init.php';
+require_once __DIR__ . '/init.php';
 
 use enum\HttpStatusCodeEnum;
 use enum\HttpMethodEnum;
 
-/** @var mysqli $con */
+/** @var mysqli $connection */
 /** @var array $auth_user */
 /** @var array  $categories */
 
@@ -21,7 +21,8 @@ $form_data = [];
 
 if ($_SERVER['REQUEST_METHOD'] === HttpMethodEnum::POST->value) {
     $form_data = array_map('trim', $_POST);
-    $user = getUserByEmail($con, $form_data[EMAIL_FIELD]);
+    $email = $form_data[EMAIL_FIELD] ?? '';
+    $user = getUserByEmail($connection, $email);
 
     validateFormData(VALIDATION_RULES[LOGIN_FORM_KEY], $form_data, $errors, $user);
 
@@ -36,7 +37,6 @@ if ($_SERVER['REQUEST_METHOD'] === HttpMethodEnum::POST->value) {
         exit;
     }
 }
-
 
 $page_content = include_template('login.php', compact(
     'categories',

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 // host for docker-build must be "mysql"
 return [
     'host'     => 'localhost',

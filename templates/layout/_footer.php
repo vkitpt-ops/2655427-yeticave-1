@@ -10,8 +10,8 @@
 
             <?php
                 $mode = 'footer';
-                include 'templates/_partials/nav.php';
-            ?>
+include 'templates/_partials/nav.php';
+?>
 
         </ul>
     </nav>

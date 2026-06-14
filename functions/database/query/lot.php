@@ -9,7 +9,8 @@ declare(strict_types=1);
  *
  * @return array
  */
-function getNewLots(mysqli $connection): array {
+function getNewLots(mysqli $connection): array
+{
     $sql = "SELECT
         lot.id AS lot_id,
         lot.title,
@@ -18,7 +19,6 @@ function getNewLots(mysqli $connection): array {
         category.name AS category_name,
         lot.expire_date
     FROM `lot`
-    LEFT JOIN `bid` ON bid.lot_id = lot.id
     JOIN `category` ON category.id = lot.category_id
     WHERE lot.expire_date > NOW()
     ORDER BY lot.created_at DESC
@@ -33,9 +33,10 @@ function getNewLots(mysqli $connection): array {
  * @param mysqli $connection Active database connection
  * @param int    $id
  *
- * @return ?array
+ * @return array|null
  */
-function getLotById(mysqli $connection, int $id): ?array {
+function getLotById(mysqli $connection, int $id): ?array
+{
     if ($id === 0) {
         return null;
     }
@@ -54,10 +55,10 @@ function getLotById(mysqli $connection, int $id): ?array {
     FROM `lot`
     LEFT JOIN `bid` ON bid.lot_id = lot.id
     JOIN `category` ON category.id = lot.category_id
-    WHERE lot.id = $id
+    WHERE lot.id = ?
     GROUP BY lot.id";
 
-    return fetchOne($connection, $sql);
+    return fetchOne($connection, $sql, 'i', [$id]);
 }
 
 /**
@@ -68,17 +69,18 @@ function getLotById(mysqli $connection, int $id): ?array {
  *
  * @return int Number of lots matching the category filter
  */
-function getLotsCountByCategorySlug(mysqli $connection, ?string $category_slug): int {
+function getLotsCountByCategorySlug(mysqli $connection, ?string $category_slug): int
+{
     $category_slug = mysqli_real_escape_string($connection, (string)$category_slug);
 
     $sql = "SELECT
         COUNT(*) as cnt
-        FROM lot
-        JOIN category ON category.id = lot.category_id
-        WHERE lot.expire_date > NOW()
-            AND category.slug = '$category_slug'";
+    FROM lot
+    JOIN category ON category.id = lot.category_id
+    WHERE lot.expire_date > NOW()
+        AND category.slug = ?";
 
-    $result = fetchOne($connection, $sql);
+    $result = fetchOne($connection, $sql, 's', [$category_slug]);
     return (int)($result['cnt'] ?? 0);
 }
 
@@ -87,10 +89,13 @@ function getLotsCountByCategorySlug(mysqli $connection, ?string $category_slug):
  *
  * @param mysqli      $connection     Active database connection
  * @param string|null $category_slug  Category slug (can be null)
+ * @param int         $limit
+ * @param int         $offset
  *
  * @return array
  */
-function getLotsByCategorySlug(mysqli $connection, ?string $category_slug, int $limit, int $offset): array {
+function getLotsByCategorySlug(mysqli $connection, ?string $category_slug, int $limit, int $offset): array
+{
     $category_slug = mysqli_real_escape_string($connection, (string)$category_slug);
 
     $sql = "SELECT
@@ -103,11 +108,11 @@ function getLotsByCategorySlug(mysqli $connection, ?string $category_slug, int $
     FROM `lot`
     JOIN `category` ON category.id = lot.category_id
     WHERE lot.expire_date > NOW()
-    AND category.slug = '$category_slug'
+    AND category.slug = ?
     ORDER BY lot.created_at DESC
     LIMIT $limit OFFSET $offset";
 
-    return fetchAll($connection, $sql);
+    return fetchAll($connection, $sql, 's', [$category_slug]);
 }
 
 /**
@@ -118,18 +123,15 @@ function getLotsByCategorySlug(mysqli $connection, ?string $category_slug, int $
  *
  * @return int
  */
-function getLotsCountBySearch(mysqli $connection, string $value): int {
+function getLotsCountBySearch(mysqli $connection, string $value): int
+{
     $sql = "SELECT
         COUNT(*) as cnt
     FROM `lot`
     JOIN `category` ON category.id = lot.category_id
     WHERE MATCH(lot.title,lot.description) AGAINST(?)";
 
-    $stmt = db_get_prepare_stmt($connection, $sql, [$value]);
-    mysqli_stmt_execute($stmt);
-
-    $result = mysqli_stmt_get_result($stmt);
-    $row = mysqli_fetch_assoc($result);
+    $row = fetchOne($connection, $sql, 's', [$value]);
 
     return (int)($row['cnt'] ?? 0);
 }
@@ -139,10 +141,13 @@ function getLotsCountBySearch(mysqli $connection, string $value): int {
  *
  * @param mysqli $connection Active database connection
  * @param string $value      Search query string
+ * @param int    $limit
+ * @param int    $offset
  *
  * @return array List of found lots
  */
-function getAllLotsBySearch(mysqli $connection, string $value, int $limit, int $offset): array {
+function getAllLotsBySearch(mysqli $connection, string $value, int $limit, int $offset): array
+{
     $sql = "SELECT
         lot.id AS lot_id,
         lot.title,
@@ -156,12 +161,7 @@ function getAllLotsBySearch(mysqli $connection, string $value, int $limit, int $
     ORDER BY lot.created_at DESC
     LIMIT $limit OFFSET $offset";
 
-    $stmt = db_get_prepare_stmt($connection, $sql, [$value]);
-    mysqli_stmt_execute($stmt);
-
-    $result = mysqli_stmt_get_result($stmt);
-
-    return mysqli_fetch_all($result, MYSQLI_ASSOC);
+    return fetchAll($connection, $sql, 's', [$value]);
 }
 
 /**
@@ -172,7 +172,8 @@ function getAllLotsBySearch(mysqli $connection, string $value, int $limit, int $
  *
  * @return string|int|null
  */
-function addLot(mysqli $connection, array $data): string|int|null {
+function addLot(mysqli $connection, array $data): string|int|null
+{
     $sql = "INSERT INTO lot (
         title,
         description,
