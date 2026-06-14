@@ -39,21 +39,20 @@ function formatPrice(float $price): string
  */
 function getRemainingTime(string $value): array
 {
-    if (empty($value)) {
-        return [0, 0];
+    if (!empty($value)) {
+        $now = new DateTime();
+        $future = new DateTime($value);
+
+        $diff = date_diff($now, $future);
+
+        $total_minutes = ($diff->days * HOURS_IN_DAY + $diff->h) * MINUTES_IN_HOUR + $diff->i;
+
+        $hours = intdiv($total_minutes, MINUTES_IN_HOUR);
+        $minutes = $total_minutes % MINUTES_IN_HOUR;
+
+        return [$hours, $minutes];
     }
-
-    $now = new DateTime();
-    $future = new DateTime($value);
-
-    $diff = date_diff($now, $future);
-
-    $total_minutes = ($diff->days * HOURS_IN_DAY + $diff->h) * MINUTES_IN_HOUR + $diff->i;
-
-    $hours = intdiv($total_minutes, MINUTES_IN_HOUR);
-    $minutes = $total_minutes % MINUTES_IN_HOUR;
-
-    return [$hours, $minutes];
+    return [0, 0];
 }
 
 /**
@@ -107,32 +106,34 @@ function buildUrl(array $query, int $pageNumber): string
  *
  * @return string Relative time (for example: "5 minutes ago")
  */
-function time_ago(string $datetime): string
+function getTimeAgo(string $datetime): string
 {
     $time = strtotime($datetime);
     $diff = time() - $time;
 
+    $result = '';
+
     if ($diff < 60) {
-        return 'только что';
+        $result = 'только что';
+    } elseif ($diff < 3600) {
+        $minutes = intdiv($diff, 60);
+        $result = $minutes . ' '
+            . get_noun_plural_form($minutes, 'минута', 'минуты', 'минут')
+            . ' назад';
+    } elseif ($diff < 86400) {
+        $hours = intdiv($diff, 3600);
+        $result = $hours . ' '
+            . get_noun_plural_form($hours, 'час', 'часа', 'часов')
+            . ' назад';
+    } else {
+        $days = intdiv($diff, 86400);
+
+        $result = $days === 1
+            ? 'вчера'
+            : $days . ' '
+                . get_noun_plural_form($days, 'день', 'дня', 'дней')
+                . ' назад';
     }
 
-    $minutes = intdiv($diff, 60);
-
-    if ($minutes < 60) {
-        return $minutes . ' ' . get_noun_plural_form($minutes, 'минута', 'минуты', 'минут') . ' назад';
-    }
-
-    $hours = intdiv($diff, 3600);
-
-    if ($hours < 24) {
-        return $hours . ' ' . get_noun_plural_form($hours, 'час', 'часа', 'часов') . ' назад';
-    }
-
-    $days = intdiv($diff, 86400);
-
-    if ($days === 1) {
-        return 'вчера';
-    }
-
-    return $days . ' ' . get_noun_plural_form($days, 'день', 'дня', 'дней') . ' назад';
+    return $result;
 }

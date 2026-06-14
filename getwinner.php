@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Symfony\Component\Mailer\Transport;
 use Symfony\Component\Mailer\Mailer;
 use Symfony\Component\Mime\Email;
+use Symfony\Component\Dotenv\Dotenv;
 
 require_once __DIR__ . '/vendor/autoload.php';
 require_once __DIR__ . '/functions/database/core.php';
@@ -12,9 +13,16 @@ require_once __DIR__ . '/functions/database/query/bid.php';
 require_once __DIR__ . '/functions/helpers.php';
 require_once __DIR__ . '/functions/functions.php';
 
+$dotenv = new Dotenv();
+$dotenv->load(__DIR__.'/.env');
+
 $con = connectToMySQL();
 
-$dsn = 'smtp://mmmtttrrt@mail.ru:w2nAeKKkyoAsB6fKdOwJ@smtp.mail.ru:2525?encryption=tls&auth_mode=login';
+$dsn = sprintf(
+    'smtp://%s:%s@smtp.mail.ru:2525?encryption=tls&auth_mode=login',
+    $_ENV['MAIL_USER'],
+    $_ENV['MAIL_PASSWORD']
+);
 $transport = Transport::fromDsn($dsn);
 
 assignWinnerBids($con);
@@ -43,9 +51,7 @@ foreach ($winner_bids as $winner_bid) {
     try {
         $mailer->send($email);
         setWinnerNotified($con, (int)$winner_bid['lot_id']);
-        echo "рботает";
     } catch (\Throwable $e) {
-        echo "нет";
         echo $e->getMessage();
     }
 }

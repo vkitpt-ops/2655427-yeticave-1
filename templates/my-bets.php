@@ -68,7 +68,7 @@
                     <?= $bid['amount'] ?>
                 </td>
                 <td class="rates__time">
-                    <?= time_ago($bid['created_at']) ?>
+                    <?= getTimeAgo($bid['created_at']) ?>
                 </td>
             </tr>
         <?php endforeach; ?>
