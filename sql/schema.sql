@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS `lot` (
     author_id       INT UNSIGNED NOT NULL,
     category_id     INT UNSIGNED NOT NULL,
     winner_bid_id   INT UNSIGNED NULL,
-    winner_notified INT          NULL,
+    winner_notified INT TINYINT  NULL,
 
 
     INDEX idx_author_id     (author_id),
