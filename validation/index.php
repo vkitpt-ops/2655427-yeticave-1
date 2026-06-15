@@ -15,7 +15,6 @@ declare(strict_types=1);
  */
 function validateFormData(array $rules, array $form_data, array &$errors, ?array $allowed_list = []): void
 {
-
     foreach ($rules as $field => $validators) {
 
         $value = $form_data[$field] ?? '';
