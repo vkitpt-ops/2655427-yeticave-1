@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/init.php';
 
-use enum\HttpStatusCodeEnum;
-
 /** @var mysqli $connection */
 /** @var array $auth_user */
 /** @var array $categories */
