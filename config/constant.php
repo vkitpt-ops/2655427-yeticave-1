@@ -9,4 +9,4 @@ const HOURS_IN_DAY = 24;
 const USER_SESSION_KEY = 'user';
 const EMAIL_FIELD = 'email';
 const PASSWORD_FIELD = 'password';
-const LOT_IMAGE_FIELD = 'lot-img';
+const LOT_IMAGE_FIELD = 'lot_img';

@@ -10,14 +10,10 @@
         <p class="promo__text">На нашем интернет-аукционе ты найдёшь самое эксклюзивное сноубордическое и горнолыжное снаряжение.</p>
         <ul class="promo__list">
 
-            <?= include_template('_partials/nav.php', array_merge(
-                [
-                    'mode' => 'promo'
-                ],
-                compact(
-                    'categories'
-                )
-            )) ?>
+        <?= include_template('_partials/nav.php', [
+            'mode'       => 'promo',
+            'categories' => $categories
+        ]); ?>
 
         </ul>
     </section>
@@ -29,7 +25,7 @@
             <ul class="lots__list">
 
                 <?php foreach ($lots as $lot): ?>
-                    <?= include_template('_partials/lot-cards.php', compact('lot')) ?>
+                    <?= include_template('_partials/lot-card.php', compact('lot')) ?>
                 <?php endforeach; ?>
 
             </ul>

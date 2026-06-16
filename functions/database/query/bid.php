@@ -151,7 +151,7 @@ function getWinnerBids(mysqli $connection): array
     FROM `bid`
     JOIN `user` ON user.id = bid.user_id
     JOIN `lot` ON lot.winner_bid_id = bid.id
-    WHERE lot.winner_notified !=1";
+    WHERE lot.winner_notified IS NULL";
 
     return fetchAll($connection, $sql);
 }

@@ -13,15 +13,11 @@
 <nav class="nav">
     <ul class="nav__list container">
 
-        <?= include_template('_partials/nav.php', array_merge(
-            [
-                'mode' => 'nav'
-            ],
-            compact(
-                'categories',
-                'category_slug'
-            )
-        )) ?>
+        <?= include_template('_partials/nav.php', [
+            'mode'          => 'nav',
+            'categories'    => $categories,
+            'category_slug' => $category_slug
+        ]); ?>
 
     </ul>
 </nav>
@@ -32,7 +28,7 @@
         <ul class="lots__list">
 
             <?php foreach ($category_lots as $lot): ?>
-                <?= include_template('_partials/lot-cards.php', compact('lot')) ?>
+                <?= include_template('_partials/lot-card.php', compact('lot')) ?>
             <?php endforeach; ?>
 
         </ul>

@@ -4,32 +4,32 @@ declare(strict_types=1);
 
 const ADD_LOT_FORM_KEY = 'add-lot';
 const SIGN_UP_FORM_KEY = 'sign-up';
-const ADD_BID_FORM_KEY = 'lot';
+const ADD_BID_FORM_KEY = 'add-bid';
 const LOGIN_FORM_KEY = 'login';
 
 const VALIDATION_RULES = [
     ADD_LOT_FORM_KEY => [
-        'category' => [
+        'lot_category_id' => [
             'required',
             'category'
         ],
-        'lot-name' => [
+        'lot_title' => [
             'required',
             'string:min=5&max=255'
         ],
-        'message' => [
+        'lot_description' => [
             'required',
             'string:min=5'
         ],
-        'lot-rate' => [
+        'lot_start_price' => [
             'required',
             'int:min=1'
         ],
-        'lot-step' => [
+        'lot_bid_step' => [
             'required',
             'int:min=1'
         ],
-        'lot-date' => [
+        'lot_expire_date' => [
             'required',
             'date:format=Y-m-d&gt=today'
         ]

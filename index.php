@@ -3,12 +3,12 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/init.php';
-require_once __DIR__ . '/vendor/autoload.php';
-require_once __DIR__ . '/getwinner.php';
 
 /** @var mysqli $connection */
 /** @var array $auth_user */
 /** @var array  $categories */
+
+require_once __DIR__ . '/getwinner.php';
 
 $lots = getNewLots($connection);
 

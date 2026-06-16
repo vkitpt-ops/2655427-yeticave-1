@@ -9,66 +9,66 @@
 <nav class="nav">
     <ul class="nav__list container">
 
-        <?= include_template('_partials/nav.php', array_merge(
-            [
-                'mode' => 'footer'
-            ],
-            compact(
-                'categories'
-            )
-        )); ?>
+        <?= include_template('_partials/nav.php', [
+            'mode'       => 'footer',
+            'categories' => $categories
+        ]); ?>
 
     </ul>
 </nav>
 
 <form
-    class="form container <?= !empty($errors) ? 'form--invalid' : '' ?>"
+    class="form container<?= !empty($errors) ? ' form--invalid' : '' ?>"
     action="sign-up.php"
     method="post"
     autocomplete="off"
 >
     <h2>Регистрация нового аккаунта</h2>
-    <div class="form__item <?= isset($errors['email']) ? "form__item--invalid" : '' ?>">
-        <label for="email">E-mail <sup>*</sup></label>
+    <?php $input_name = 'email'; ?>
+    <div class="form__item<?= isset($errors['email']) ? ' form__item--invalid' : '' ?>">
+        <label for="<?= $input_name ?>">E-mail <sup>*</sup></label>
         <input
-            id="email"
+            id="<?= $input_name ?>"
             type="text"
-            name="email"
+            name="<?= $input_name ?>"
             placeholder="Введите e-mail"
-            value="<?= esc($form_data['email'] ?? ''); ?>"
+            value="<?= esc($form_data[$input_name] ?? '') ?>"
         >
-        <span class="form__error"><?= $errors['email'] ?></span>
+        <span class="form__error"><?= $errors[$input_name] ?? '' ?></span>
     </div>
-    <div class="form__item <?= isset($errors['password']) ? "form__item--invalid" : '' ?>">
-        <label for="password">Пароль <sup>*</sup></label>
+    <?php $input_name = 'password'; ?>
+    <div class="form__item<?= isset($errors[$input_name]) ? ' form__item--invalid' : '' ?>">
+        <label for="<?= $input_name ?>">Пароль <sup>*</sup></label>
         <input
-            id="password"
+            id="<?= $input_name ?>"
             type="password"
-            name="password"
+            name="<?= $input_name ?>"
             placeholder="Введите пароль"
-            value="<?= esc($form_data['password'] ?? ''); ?>"
+            value="<?= esc($form_data[$input_name] ?? '') ?>"
         >
-        <span class="form__error"><?= $errors['password'] ?></span>
+        <span class="form__error"><?= $errors[$input_name] ?? '' ?></span>
     </div>
-    <div class="form__item <?= isset($errors['name']) ? "form__item--invalid" : '' ?>">
-        <label for="name">Имя <sup>*</sup></label>
+    <?php $input_name = 'name'; ?>
+    <div class="form__item<?= isset($errors[$input_name]) ? ' form__item--invalid' : '' ?>">
+        <label for="<?= $input_name ?>">Имя <sup>*</sup></label>
         <input
-            id="name"
+            id="<?= $input_name ?>"
             type="text"
-            name="name"
+            name="<?= $input_name ?>"
             placeholder="Введите имя"
-            value="<?= esc($form_data['name'] ?? ''); ?>"
+            value="<?= esc($form_data[$input_name] ?? '') ?>"
         >
-        <span class="form__error"><?= $errors['name'] ?></span>
+        <span class="form__error"><?= $errors[$input_name] ?? '' ?></span>
     </div>
-    <div class="form__item <?= isset($errors['message']) ? "form__item--invalid" : '' ?>">
-        <label for="message">Контактные данные <sup>*</sup></label>
+    <?php $input_name = 'message'; ?>
+    <div class="form__item<?= isset($errors[$input_name]) ? ' form__item--invalid' : '' ?>">
+        <label for="<?= $input_name ?>">Контактные данные <sup>*</sup></label>
         <textarea
-            id="message"
-            name="message"
+            id="<?= $input_name ?>"
+            name="<?= $input_name ?>"
             placeholder="Напишите как с вами связаться"
-        ><?= esc($form_data['message'] ?? '') ?></textarea>
-        <span class="form__error"><?= $errors['message'] ?></span>
+        ><?= esc($form_data[$input_name] ?? '') ?></textarea>
+        <span class="form__error"><?= $errors[$input_name] ?? '' ?></span>
     </div>
 
     <?php if (!empty($errors)): ?>

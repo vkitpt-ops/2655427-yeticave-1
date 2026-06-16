@@ -13,13 +13,13 @@ declare(strict_types=1);
 function prepareLotData(array $form_data, int $user_id): array
 {
     return [
-        $form_data['lot-name'],
-        $form_data['message'],
-        $form_data['lot-rate'],
-        $form_data['lot-date'],
-        $form_data['lot-step'],
-        (int)$form_data['category'],
-        $form_data['lot-img'],
+        $form_data['lot_title'],
+        $form_data['lot_description'],
+        $form_data['lot_start_price'],
+        $form_data['lot_expire_date'],
+        $form_data['lot_bid_step'],
+        (int)$form_data['lot_category_id'],
+        $form_data['lot_img'],
         (int) $user_id
     ];
 }

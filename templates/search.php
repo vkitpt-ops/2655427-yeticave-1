@@ -2,24 +2,20 @@
 
 /** @var array $categories */
 /** @var array $found_lots */
-/** @var string $search_value */
-/** @var int $page */
-/** @var array $pagination */
 /** @var array $query */
+/** @var array $pagination */
+/** @var int $page */
+/** @var string $search_value */
 
 ?>
 
 <nav class="nav">
     <ul class="nav__list container">
 
-        <?= include_template('_partials/nav.php', array_merge(
-            [
-                'mode' => 'footer'
-            ],
-            compact(
-                'categories'
-            )
-        )); ?>
+        <?= include_template('_partials/nav.php', [
+            'mode'       => 'footer',
+            'categories' => $categories
+        ]); ?>
 
     </ul>
 </nav>
@@ -36,7 +32,7 @@
         <ul class="lots__list">
 
             <?php foreach ($found_lots as $lot): ?>
-                <?= include_template('_partials/lot-cards.php', compact('lot')) ?>
+                <?= include_template('_partials/lot-card.php', compact('lot')) ?>
             <?php endforeach; ?>
 
         </ul>

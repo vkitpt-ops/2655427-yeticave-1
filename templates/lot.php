@@ -1,26 +1,23 @@
 <?php
 
+/** @var int $min_bid */
 /** @var array $auth_user */
 /** @var array $categories */
+/** @var array $errors */
 /** @var array|null $lot */
 /** @var array|null $bids */
 /** @var array|null $last_bid */
-/** @var array $errors */
-/** @var int $min_bid */
+
 
 ?>
 
 <nav class="nav">
     <ul class="nav__list container">
 
-        <?= include_template('_partials/nav.php', array_merge(
-            [
-                'mode' => 'footer'
-            ],
-            compact(
-                'categories'
-            )
-        )); ?>
+        <?= include_template('_partials/nav.php', [
+            'mode'       => 'footer',
+            'categories' => $categories
+        ]); ?>
 
     </ul>
 </nav>
@@ -30,7 +27,8 @@
     <div class="lot-item__content">
         <div class="lot-item__left">
             <div class="lot-item__image">
-                <img src="<?= esc($lot['img_url'] ?? '') ?>"
+                <img
+                    src="<?= esc($lot['img_url'] ?? '') ?>"
                     width="730"
                     height="548"
                     alt="Сноуборд"
@@ -48,7 +46,7 @@
 
                 <?php [$hours, $minutes] = getRemainingTime(esc($lot['expire_date'] ?? '')); ?>
 
-                <div class="lot-item__timer timer <?= $hours < 1 ? 'timer--finishing' : '' ?> ">
+                <div class="lot-item__timer timer<?= $hours < 1 ? ' timer--finishing' : '' ?> ">
                     <?= sprintf('%02d:%02d', $hours, $minutes) ?>
                 </div>
                 <div class="lot-item__cost-state">
@@ -67,19 +65,21 @@
                     && ($last_bid['user_id'] ?? null) !== $auth_user['id']
                 ): ?>
 
-                    <form class="lot-item__form"
+                    <form
+                        class="lot-item__form"
                         action="lot.php?id=<?= $lot['id'] ?>"
                         method="post"
                         autocomplete="off"
                     >
-                        <p class="lot-item__form-item form__item <?= !empty($errors) ? 'form__item--invalid' : '' ?>">
-                            <label for="cost">Ваша ставка</label>
-                                <input id="cost"
+                        <?php $input_name = 'cost'; ?>
+                        <p class="lot-item__form-item form__item<?= !empty($errors) ? ' form__item--invalid' : '' ?>">
+                            <label for="<?= $input_name ?>">Ваша ставка</label>
+                                <input id="<?= $input_name ?>"
                                     type="number"
-                                    name="cost"
+                                    name="<?= $input_name ?>"
                                     placeholder="<?= formatPrice($min_bid) ?>"
                                 >
-                                <span class="form__error"><?= $errors['cost'] ?? '' ?></span>
+                                <span class="form__error"><?= $errors[$input_name] ?? '' ?></span>
                         </p>
                         <button type="submit" class="button">Сделать ставку</button>
                     </form>
@@ -94,7 +94,7 @@
                     <?php foreach ($bids as $bid): ?>
                         <tr class="history__item">
                             <td class="history__name"><?= $bid['user_name'] ?></td>
-                            <td class="history__price"><?= $bid['amount'] ?> р</td>
+                            <td class="history__price"><?= formatPrice($bid['amount']) ?></td>
                             <td class="history__time"><?= getTimeAgo($bid['created_at']) ?></td>
                         </tr>
                     <?php endforeach; ?>

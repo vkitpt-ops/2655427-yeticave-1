@@ -1,5 +1,3 @@
-DROP DATABASE IF EXISTS yeticave;
-
 CREATE DATABASE IF NOT EXISTS yeticave
     DEFAULT CHARACTER SET utf8mb4
     DEFAULT COLLATE utf8mb4_0900_ai_ci;
@@ -40,7 +38,7 @@ CREATE TABLE IF NOT EXISTS `lot` (
     author_id       INT UNSIGNED NOT NULL,
     category_id     INT UNSIGNED NOT NULL,
     winner_bid_id   INT UNSIGNED NULL,
-    winner_notified INT TINYINT  NULL,
+    winner_notified TINYINT  NULL,
 
 
     INDEX idx_author_id     (author_id),
