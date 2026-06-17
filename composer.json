@@ -1,6 +1,5 @@
 {
     "require": {
-        "symfony/http-client": "^8.1",
         "symfony/mailer": "^8.1",
         "symfony/dotenv": "^8.1"
     },

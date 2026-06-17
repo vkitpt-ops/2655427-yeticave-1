@@ -1,5 +1,3 @@
-DROP DATABASE IF EXISTS yeticave;
-
 CREATE DATABASE IF NOT EXISTS yeticave
     DEFAULT CHARACTER SET utf8mb4
     DEFAULT COLLATE utf8mb4_0900_ai_ci;
@@ -28,18 +26,19 @@ CREATE TABLE IF NOT EXISTS `category` (
 );
 
 CREATE TABLE IF NOT EXISTS `lot` (
-    id            INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    created_at    TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    title         VARCHAR(128) NOT NULL,
-    description   TEXT         NOT NULL,
-    img_url       VARCHAR(255) NOT NULL,
-    start_price   INT UNSIGNED NOT NULL,
-    expire_date   DATETIME     NOT NULL,
-    bid_step      INT UNSIGNED NOT NULL,
+    id              INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    created_at      TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    title           VARCHAR(128) NOT NULL,
+    description     TEXT         NOT NULL,
+    img_url         VARCHAR(255) NOT NULL,
+    start_price     INT UNSIGNED NOT NULL,
+    expire_date     DATETIME     NOT NULL,
+    bid_step        INT UNSIGNED NOT NULL,
 
-    author_id     INT UNSIGNED NOT NULL,
-    category_id   INT UNSIGNED NOT NULL,
-    winner_bid_id INT UNSIGNED NULL,
+    author_id       INT UNSIGNED NOT NULL,
+    category_id     INT UNSIGNED NOT NULL,
+    winner_bid_id   INT UNSIGNED NULL,
+    winner_notified TINYINT      NULL,
 
 
     INDEX idx_author_id     (author_id),

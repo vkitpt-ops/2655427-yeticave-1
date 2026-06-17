@@ -3,57 +3,67 @@
 declare(strict_types=1);
 
 /**
- * Prepared data for filling in the form fields when adding a new lot
+ * Prepares data for creating a new lot.
  *
- * @param array $form_data
- * @param int   $user_id ID of the registered user
+ * Collects and formats lot information from the creation form:
+ * title, description, start price, expiration date, bid step,
+ * category, image and owner ID.
  *
- * @return array
+ * @param array $form_data Lot creation form data
+ * @param int $user_id ID of the user who creates the lot
+ *
+ * @return array Prepared lot data
  */
 function prepareLotData(array $form_data, int $user_id): array
 {
     return [
-        $form_data['lot-name'],
-        $form_data['message'],
-        $form_data['lot-rate'],
-        $form_data['lot-date'],
-        $form_data['lot-step'],
-        (int)$form_data['category'],
-        $form_data['lot-img'],
+        $form_data['lot_title'],
+        $form_data['lot_description'],
+        $form_data['lot_start_price'],
+        $form_data['lot_expire_date'],
+        $form_data['lot_bid_step'],
+        (int)$form_data['lot_category_id'],
+        $form_data['lot_img'],
         (int) $user_id
     ];
 }
 
 /**
- * Prepared data for the fields of the user registration form
+ * Prepares user data for registration.
  *
- * @param array $form_data
+ * Collects and formats user information from the registration form:
+ * email, username, hashed password and contact information.
  *
- * @return array
+ * @param array $form_data Registration form data
+ *
+ * @return array Prepared user data
  */
 function prepareUserData(array $form_data): array
 {
     return [
-        $form_data['email'],
-        $form_data['name'],
-        password_hash($form_data['password'], PASSWORD_DEFAULT),
-        $form_data['message']
+        $form_data['user_email'],
+        $form_data['user_name'],
+        password_hash($form_data['user_password'], PASSWORD_DEFAULT),
+        $form_data['user_contact_info']
     ];
 }
 
 /**
- * Prepared data for filling in the add rate form field
+ * Prepares bid data for inserting into the database.
  *
- * @param int   $user_id
- * @param int   $lot_id
- * @param array $form_data
+ * Creates an array of values required to add a new bid:
+ * bid amount, user ID and lot ID.
  *
- * @return array
+ * @param int $user_id The ID of the user who places the bid
+ * @param int $lot_id The ID of the lot being bid on
+ * @param array $form_data Form data containing bid information
+ *
+ * @return array Prepared bid data
  */
 function prepareBidData(int $user_id, int $lot_id, array $form_data): array
 {
     return [
-        $form_data['cost'],
+        $form_data['bid_cost'],
         $user_id,
         $lot_id
     ];

@@ -1,7 +1,6 @@
 <?php
 
-/** @var array|null $lot */
-/** @var array|null $bids */
+/** @var array $lot */
 
 ?>
 
@@ -22,12 +21,12 @@
         <div class="lot__state">
             <div class="lot__rate">
                 <span class="lot__amount">Стартовая цена</span>
-                <span class="lot__cost"><?= esc(formatPrice($lot['start_price'] ?? 0)) ?></span>
+                <span class="lot__cost"><?= formatPrice($lot['start_price'] ?? 0) ?></span>
             </div>
 
             <?php [$hours, $minutes] = getRemainingTime($lot['expire_date'] ?? ''); ?>
 
-            <div class="lot__timer timer <?= $hours < 1 ? 'timer--finishing' : '' ?>">
+            <div class="lot__timer timer<?= $hours < 1 ? ' timer--finishing' : '' ?>">
                 <?= sprintf('%02d:%02d', $hours, $minutes) ?>
             </div>
         </div>

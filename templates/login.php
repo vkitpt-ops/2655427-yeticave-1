@@ -9,46 +9,44 @@
 <nav class="nav">
     <ul class="nav__list container">
 
-        <?= include_template('_partials/nav.php', array_merge(
-            [
-                'mode' => 'footer'
-            ],
-            compact(
-                'categories'
-            )
-        )); ?>
+        <?= include_template('_partials/nav.php', [
+            'mode'       => 'footer',
+            'categories' => $categories
+        ]); ?>
 
     </ul>
 </nav>
 
 <form
-    class="form container <?= !empty($errors) ? 'form--invalid' : '' ?>"
+    class="form container<?= !empty($errors) ? ' form--invalid' : '' ?>"
     action="login.php"
     method="post"
     autocomplete="off"
 >
     <h2>Вход</h2>
-    <div class="form__item <?= isset($errors['email']) ? "form__item--invalid" : '' ?>">
-        <label for="email">E-mail <sup>*</sup></label>
+    <?php $input_name = 'user_email'; ?>
+    <div class="form__item<?= isset($errors[$input_name]) ? ' form__item--invalid' : '' ?>">
+        <label for="<?= $input_name ?>">E-mail <sup>*</sup></label>
         <input
-            id="email"
+            id="<?= $input_name ?>"
             type="text"
-            name="email"
+            name="<?= $input_name ?>"
             placeholder="Введите e-mail"
-            value="<?= esc($form_data['email'] ?? ''); ?>"
+            value="<?= esc($form_data[$input_name] ?? '') ?>"
         >
-        <span class="form__error"><?= $errors['email'] ?></span>
+        <span class="form__error"><?= $errors[$input_name] ?? '' ?></span>
     </div>
-    <div class="form__item form__item--last <?= isset($errors['password']) ? "form__item--invalid" : '' ?>">
-        <label for="password">Пароль <sup>*</sup></label>
+    <?php $input_name = 'user_password'; ?>
+    <div class="form__item form__item--last<?= isset($errors[$input_name]) ? ' form__item--invalid' : '' ?>">
+        <label for="<?= $input_name ?>">Пароль <sup>*</sup></label>
         <input
-            id="password"
+            id="<?= $input_name ?>"
             type="password"
-            name="password"
+            name="<?= $input_name ?>"
             placeholder="Введите пароль"
-            value="<?= esc($form_data['password'] ?? ''); ?>"
+            value="<?= esc($form_data[$input_name] ?? '') ?>"
         >
-        <span class="form__error"><?= $errors['password'] ?></span>
+        <span class="form__error"><?= $errors[$input_name] ?? '' ?></span>
     </div>
     <button type="submit" class="button">Войти</button>
 </form>

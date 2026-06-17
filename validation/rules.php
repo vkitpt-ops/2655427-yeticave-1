@@ -4,71 +4,71 @@ declare(strict_types=1);
 
 const ADD_LOT_FORM_KEY = 'add-lot';
 const SIGN_UP_FORM_KEY = 'sign-up';
-const ADD_BID_FORM_KEY = 'lot';
+const ADD_BID_FORM_KEY = 'add-bid';
 const LOGIN_FORM_KEY = 'login';
 
 const VALIDATION_RULES = [
     ADD_LOT_FORM_KEY => [
-        'category' => [
+        'lot_category_id' => [
             'required',
             'category'
         ],
-        'lot-name' => [
+        'lot_title' => [
             'required',
             'string:min=5&max=255'
         ],
-        'message' => [
+        'lot_description' => [
             'required',
             'string:min=5'
         ],
-        'lot-rate' => [
+        'lot_start_price' => [
             'required',
             'int:min=1'
         ],
-        'lot-step' => [
+        'lot_bid_step' => [
             'required',
             'int:min=1'
         ],
-        'lot-date' => [
+        'lot_expire_date' => [
             'required',
             'date:format=Y-m-d&gt=today'
         ]
     ],
     SIGN_UP_FORM_KEY => [
-        'email' => [
+        'user_email' => [
             'required',
             'string:min=4&max=128',
             'email',
             'unique_email'
         ],
-        'name' => [
+        'user_name' => [
             'required',
             'string:min=4&max=128',
             'name:filter'
         ],
-        'password' => [
+        'user_password' => [
             'required',
             'string:min=8&max=255',
             'password'
         ],
-        'message' => [
+        'user_contact_info' => [
             'required',
             'string:min=5'
         ]
     ],
     LOGIN_FORM_KEY => [
-        'email' => [
+        'user_email' => [
             'required',
             'email',
             'user_exists'
         ],
-        'password' => [
+        'user_password' => [
             'required',
             'password_match'
         ]
     ],
     ADD_BID_FORM_KEY => [
-        'cost' => [
+        'bid_cost' => [
             'required',
             'int'
         ]

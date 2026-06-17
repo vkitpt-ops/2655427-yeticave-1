@@ -10,7 +10,7 @@ require_once __DIR__ . '/init.php';
 
 $category_slug = filter_input(INPUT_GET, 'category');
 
-$per_page = 6;
+$per_page = 9;
 $page = max(1, (int)($_GET['page'] ?? 1));
 
 $total = getLotsCountByCategorySlug($connection, $category_slug);

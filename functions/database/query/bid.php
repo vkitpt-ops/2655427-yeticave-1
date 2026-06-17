@@ -6,39 +6,41 @@ declare(strict_types=1);
  * Retrieves all bids for a specific lot
  *
  * @param mysqli $connection Active database connection
- * @param int    $lot_id
+ * @param int $lot_id
  *
- * @return array
+ * @return array List of bids
  */
 function getBidsByLotId(mysqli $connection, int $lot_id): array
 {
-    if ($lot_id === 0) {
-        return [];
+    $bids = [];
+
+    if ($lot_id > 0) {
+        $sql = "SELECT
+            user.name AS user_name,
+            bid.amount,
+            bid.created_at,
+            bid.user_id,
+            lot.start_price,
+            lot.bid_step
+        FROM `bid`
+        JOIN `user` ON  bid.user_id = user.id
+        JOIN `lot` ON bid.lot_id = lot.id
+        WHERE bid.lot_id = ?
+        ORDER BY bid.created_at DESC";
+
+        $bids = fetchAll($connection, $sql, 'i', [$lot_id]);
     }
 
-    $sql = "SELECT
-        user.name AS user_name,
-        bid.amount,
-        bid.created_at,
-        bid.user_id,
-        lot.start_price,
-        lot.bid_step
-    FROM `bid`
-    JOIN `user` ON  bid.user_id = user.id
-    JOIN `lot` ON bid.lot_id = lot.id
-    WHERE bid.lot_id = ?
-    ORDER BY bid.created_at DESC";
-
-    return fetchAll($connection, $sql, 'i', [$lot_id]);
+    return $bids;
 }
 
 /**
  * Retrieves all bids placed by a specific user
  *
  * @param mysqli $connection Active database connection
- * @param int    $user_id    User ID whose bids should be retrieved
+ * @param int $user_id User ID
  *
- * @return array
+ * @return array List of user bids
  */
 function getBidsByUserId(mysqli $connection, int $user_id): array
 {
@@ -64,15 +66,16 @@ function getBidsByUserId(mysqli $connection, int $user_id): array
 }
 
 /**
- * Inserts a new bid into the database.
+ * Creates a new bid and inserts it into the database.
  *
  * @param mysqli $connection Active database connection
- * @param array  $data       Bid data for insertion
+ * @param array $data Bid data for insertion
  *
- * @return int|string|null Returns inserted bid ID on success, null on failure
+ * @return int|null Created bid ID or null on failure
  */
-function addBid(mysqli $connection, array $data): string|int|null
+function addBid(mysqli $connection, array $data): int|null
 {
+    $bid_id = null;
     $sql = "INSERT INTO bid (
         amount,
         user_id,
@@ -80,14 +83,19 @@ function addBid(mysqli $connection, array $data): string|int|null
     ) VALUES (?, ?, ?)";
 
     $stmt = db_get_prepare_stmt($connection, $sql, $data);
+
     if (mysqli_stmt_execute($stmt)) {
-        return mysqli_insert_id($connection);
+        $bid_id = mysqli_insert_id($connection);
     }
-    return null;
+
+    return $bid_id;
 }
 
 /**
- * Assigns winning bids to all expired lots
+ * Assigns winning bids to expired lots.
+ *
+ * Finds the highest bid for each expired lot
+ * and assigns it as the winning bid.
  *
  * @param mysqli $connection Active database connection
  *
@@ -111,12 +119,12 @@ function assignWinnerBids(mysqli $connection): void
 }
 
 /**
- * Returns IDs of winning bids belonging to the specified user
+ * Retrieves winning bid IDs for a specific user.
  *
  * @param mysqli $connection Active database connection
- * @param int    $user_id    User ID to fetch winner bids for
+ * @param int $user_id User ID
  *
- * @return array
+ * @return array List of winning bid IDs
  */
 function getWinnerBidIds(mysqli $connection, int $user_id): array
 {
@@ -133,11 +141,14 @@ function getWinnerBidIds(mysqli $connection, int $user_id): array
 }
 
 /**
- * Receives a list of winning bets with user and lot data
+ * Retrieves winning bids that have not been notified.
+ *
+ * Returns bid, user and lot information
+ * for sending winner notifications.
  *
  * @param mysqli $connection Active database connection
  *
- * @return array
+ * @return array List of winning bids
  */
 function getWinnerBids(mysqli $connection): array
 {
@@ -151,17 +162,16 @@ function getWinnerBids(mysqli $connection): array
     FROM `bid`
     JOIN `user` ON user.id = bid.user_id
     JOIN `lot` ON lot.winner_bid_id = bid.id
-    WHERE lot.winner_notified !=1";
+    WHERE lot.winner_notified IS NULL";
 
     return fetchAll($connection, $sql);
 }
 
 /**
- * Updates the winner_notified field in the lot table, setting the value to 1 for the specified lot
- * (the winner's email has been sent)
+ * Marks a lot as notified after sending a winner notification.
  *
  * @param mysqli $connection Active database connection
- * @param int    $lot_id     ID of the lot to mark
+ * @param int $lot_id Lot ID
  *
  * @return void
  */

@@ -1,6 +1,16 @@
 <?php
 
 declare(strict_types=1);
+
+require_once __DIR__ . '/vendor/autoload.php';
+
+use Symfony\Component\Dotenv\Dotenv;
+
+$dotenv = new Dotenv();
+
+$dotenv->usePutenv(true);
+$dotenv->loadEnv(__DIR__ . '/.env');
+
 date_default_timezone_set('UTC');
 
 require_once __DIR__ . '/config/constant.php';

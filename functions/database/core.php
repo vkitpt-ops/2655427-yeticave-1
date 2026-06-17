@@ -3,9 +3,11 @@
 declare(strict_types=1);
 
 /**
- * connect to MySQL
+ * Creates a connection to the MySQL database.
  *
- * @return mysqli
+ * Loads database configuration and initializes a mysqli connection.
+ *
+ * @return mysqli Active database connection
  */
 function connectToMySQL(): mysqli
 {
@@ -28,12 +30,16 @@ function connectToMySQL(): mysqli
 }
 
 /**
- * Executes a SELECT query safely and returns all rows
+ * Executes a SELECT query and returns all matching rows.
+ *
+ * Uses prepared statements to safely bind parameters.
  *
  * @param mysqli $connection Active database connection
- * @param string $sql
+ * @param string $sql SQL query
+ * @param string $types Parameter types for binding
+ * @param array $params Query parameters
  *
- * @return array
+ * @return array List of rows
  */
 function fetchAll(mysqli $connection, string $sql, string $types = '', array $params = []): array
 {
@@ -60,12 +66,16 @@ function fetchAll(mysqli $connection, string $sql, string $types = '', array $pa
 }
 
 /**
- * Executes a SELECT query safely and returns one row
+ * Executes a SELECT query and returns a single row.
+ *
+ * Uses prepared statements to safely bind parameters.
  *
  * @param mysqli $connection Active database connection
- * @param string $sql
+ * @param string $sql SQL query
+ * @param string $types Parameter types for binding
+ * @param array $params Query parameters
  *
- * @return array|null
+ * @return array|null Row data or null if no result found
  */
 function fetchOne(mysqli $connection, string $sql, string $types = '', array $params = []): ?array
 {

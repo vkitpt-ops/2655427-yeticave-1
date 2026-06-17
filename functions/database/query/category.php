@@ -3,11 +3,11 @@
 declare(strict_types=1);
 
 /**
- * Get all categories
+ * Retrieves all available categories from the database.
  *
  * @param mysqli $connection Active database connection
  *
- * @return array
+ * @return array List of categories
  */
 function getAllCategories(mysqli $connection): array
 {
@@ -21,16 +21,19 @@ function getAllCategories(mysqli $connection): array
 }
 
 /**
- * Get the category name
+ * Retrieves a category name by its slug.
  *
- * @param mysqli      $connection    Active database connection
+ * Searches for a category using the provided slug
+ * and returns the category name.
+ *
+ * @param mysqli $connection Active database connection
  * @param string|null $category_slug Category slug (can be null)
  *
- * @return array
+ * @return array Category name data
  */
 function getCategoryName(mysqli $connection, ?string $category_slug): array
 {
-    $category_slug = mysqli_real_escape_string($connection, (string)$category_slug);
+    $category_slug = mysqli_real_escape_string($connection, (string) $category_slug);
 
     $sql = "SELECT
         name

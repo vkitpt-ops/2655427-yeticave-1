@@ -3,13 +3,15 @@
 declare(strict_types=1);
 
 /**
- * Validates form fields according to the specified validation rules
- * Fills the errors array with validation messages
+ * Validates form data using the provided validation rules.
+ *
+ * Applies validators to each field and stores validation errors
+ * in the errors array.
  *
  * @param array $rules Validation rules for form fields
- * @param array $form_data The form's data array
- * @param array $errors Array of errors
- * @param array|null $allowed_list List of valid categories for category validation
+ * @param array $form_data Submitted form data
+ * @param array $errors Validation errors (passed by reference)
+ * @param array|null $allowed_list List of allowed values for validation
  *
  * @return void
  */
@@ -32,11 +34,14 @@ function validateFormData(array $rules, array $form_data, array &$errors, ?array
 }
 
 /**
- * Converts a validator parameter string into an associative array
+ * Parses validator parameters into an associative array.
  *
- * @param string $params_string
+ * Converts a parameter string into key-value pairs
+ * used by validation rules.
  *
- * @return array
+ * @param string $params_string Validator parameters string
+ *
+ * @return array Parsed validator parameters
  */
 function parseValidatorParams(string $params_string): array
 {
@@ -59,13 +64,17 @@ function parseValidatorParams(string $params_string): array
 }
 
 /**
- * Parses a validation rule, extracts validator parameters
- * Executes the corresponding validation function
+ * Validates a value using the specified validation rule.
  *
- * @param string $rule Validation rules for form fields
- * @param string $value Data to validate
+ * Parses the rule, extracts parameters and executes
+ * the corresponding validator.
  *
- * @return string|null
+ * @param string $rule Validation rule
+ * @param string $value Value to validate
+ * @param array|null $allowed_list List of allowed values
+ * @param array $form_data Submitted form data
+ *
+ * @return string|null Validation error message or null if valid
  */
 function validateByRule(string $rule, string $value, ?array $allowed_list, array $form_data): ?string
 {

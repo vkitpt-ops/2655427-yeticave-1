@@ -4,8 +4,6 @@
 /** @var array $pagination */
 /** @var array $query */
 
-require_once 'functions/functions.php';
-
 ?>
 
 <?php if ($page > 1): ?>
@@ -17,7 +15,7 @@ require_once 'functions/functions.php';
 <?php endif; ?>
 
 <?php for ($i = 1; $i <= $pagination['total_pages']; $i++): ?>
-    <li class="pagination-item <?= $i === $page ? 'pagination-item-active' : '' ?>">
+    <li class="pagination-item<?= $i === $page ? ' pagination-item-active' : '' ?>">
         <a href="<?= buildUrl($query, $i) ?>">
             <?= $i ?>
         </a>

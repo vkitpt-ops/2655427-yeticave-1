@@ -3,12 +3,12 @@
 declare(strict_types=1);
 
 /**
- * Get user information by email
+ * Retrieves a user by email address.
  *
  * @param mysqli $connection Active database connection
- * @param string $email
+ * @param string $email User email address
  *
- * @return array|null
+ * @return array|null User data or null if not found
  */
 function getUserByEmail(mysqli $connection, string $email): ?array
 {
@@ -24,15 +24,17 @@ function getUserByEmail(mysqli $connection, string $email): ?array
 }
 
 /**
- * Adding user data to the database
+ * Creates a new user and inserts the data into the database.
  *
  * @param mysqli $connection Active database connection
- * @param array  $data
+ * @param array $data User data for insertion
  *
- * @return string|int|null
+ * @return int|null Created user ID or null on failure
  */
 function addUser(mysqli $connection, array $data): string|int|null
 {
+    $user_id = null;
+
     $sql = "INSERT INTO user (
         email,
         name,
@@ -43,7 +45,8 @@ function addUser(mysqli $connection, array $data): string|int|null
     $stmt = db_get_prepare_stmt($connection, $sql, $data);
 
     if (mysqli_stmt_execute($stmt)) {
-        return mysqli_insert_id($connection);
+        $user_id = mysqli_insert_id($connection);
     }
-    return null;
+
+    return $user_id;
 }
