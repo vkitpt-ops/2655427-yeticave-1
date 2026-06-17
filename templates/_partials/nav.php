@@ -9,7 +9,7 @@
 <?php foreach ($categories as $category): ?>
 
     <?php if ($mode === 'nav'): ?>
-        <?php $is_current = !empty($category_slug) && ($category['slug']?? '') === $category_slug; ?>
+        <?php $is_current = !empty($category_slug) && ($category['slug'] ?? '') === $category_slug; ?>
         <li class="nav__item<?= $is_current ? ' nav__item--current' : '' ?>">
             <a href="all-lot.php?category=<?= esc($category['slug'] ?? '') ?>">
                 <?= esc($category['name'] ?? '') ?>

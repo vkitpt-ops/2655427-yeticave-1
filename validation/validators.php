@@ -3,77 +3,86 @@
 declare(strict_types=1);
 
 /**
- * Checks whether the field value is empty
+ * Checks whether a value is empty.
  *
- * @param string $value
+ * @param string $value Value to check
  *
- * @return string|null Error message or null
+ * @return string|null Error message or null if valid
  */
 function checkingEmptyField(string $value): ?string
 {
-    if ($value === '') {
-        return 'Заполните поле';
-    }
-    return null;
+    return $value === '' ? 'Заполните поле' : null;
 }
 
 /**
- * Checks whether the value is positive and greater than zero
+ * Validates that a value is a positive integer.
  *
- * @param string $value
+ * Checks that the value contains only digits
+ * and is greater than or equal to the specified minimum value.
  *
- * @return string|null Error message or null
+ * @param string $value Value to validate
+ * @param array $params Validation parameters
+ *
+ * @return string|null Error message or null if valid
  */
 function validatePositiveInt(string $value, array $params): ?string
 {
+    $error_message = null;
+
     if (!preg_match('/^[1-9]\d*$/', $value)) {
-        return "Введите целое значение больше нуля";
+        $error_message = "Введите целое значение больше нуля";
+    } else {
+        $min = (int)($params['min'] ?? 0);
+
+        if (intval($value) < $min) {
+            $error_message = "Минимальное значение: $min";
+        }
     }
 
-    $min = (int)($params['min'] ?? 0);
-
-    if ((int)$value < $min) {
-        return "Минимальное значение: $min";
-    }
-    return null;
+    return $error_message;
 }
 
 /**
- * Validates text length according to character limits
+ * Validates text length limits.
+ *
+ * Checks whether the text length is within
+ * the specified minimum and maximum values.
  *
  * @param string $value Text value to validate
  * @param array $params Validation parameters
  *
- * @return string|null Validation error message or null if validation passes
+ * @return string|null Error message or null if valid
  */
 function validateText(string $value, array $params): ?string
 {
     $max_characters = (int)($params['max'] ?? 0);
     $min_characters = (int)($params['min'] ?? 0);
     $string_length = mb_strlen($value);
+    $error_message = null;
 
     if ($min_characters !== 0 && $string_length < $min_characters) {
-        return "Минимальная длина поля $min_characters символов";
+        $error_message = "Минимальная длина поля $min_characters символов";
+    } elseif ($max_characters !== 0 && $string_length > $max_characters) {
+        $error_message = "Максимальная длина поля $max_characters символов";
     }
-
-    if ($max_characters !== 0 && $string_length > $max_characters) {
-        return "Максимальная длина поля $max_characters символов";
-    }
-    return null;
+    return $error_message;
 }
 
 /**
- * Checks the correctness of the date and its compliance with the form requirements
+ * Validates a date value.
  *
- * @param string $date Date in the format "YYYY-MM-DD"
+ * Checks date format and optional date constraints.
+ *
+ * @param string $date Date value to validate
  * @param array $params Validation parameters
  *
- * @return string|null Error message or null
+ * @return string|null Error message or null if valid
  */
 function validateDate(string $date, array $params): ?string
 {
     $format = $params['format'] ?? 'Y-m-d';
     $day = $params['gt'] ?? null;
+    $error_message = null;
 
     $dateTime = date_create_from_format($format, $date);
 
@@ -81,138 +90,124 @@ function validateDate(string $date, array $params): ?string
         $dateTime === false ||
         $dateTime->format($format) !== $date
     ) {
-        return "Введите дату в формате «ГГГГ-ММ-ДД»";
-    }
-
-    if ($day === 'today') {
+        $error_message = "Введите дату в формате «ГГГГ-ММ-ДД»";
+    } elseif ($day === 'today') {
         $today = new DateTimeImmutable('tomorrow');
 
         if ($dateTime <= $today) {
-            return "Дата должна быть больше текущей минимум на 1 день";
+            $error_message = "Дата должна быть больше текущей минимум на 1 день";
         }
     }
-    return null;
+    return $error_message;
 }
 
 /**
- * Checks whether the category exists in the list of allowed categories
+ * Validates that a category exists.
  *
- * @param array $allowed_list List of valid categories for category validation
- * @param string $category
+ * Checks whether the category ID is included
+ * in the list of allowed categories.
  *
- * @return string|null Error message or null
+ * @param string $category Category ID
+ * @param array $allowed_list Allowed category IDs
+ *
+ * @return string|null Error message or null if valid
  */
 function validateCategory(string $category, array $allowed_list): ?string
 {
-    $id = (int)$category;
+    $id = (int) $category;
 
-    if (!in_array($id, $allowed_list)) {
-        return "Указана несуществующая категория";
-    }
-    return null;
+    return !in_array($id, $allowed_list) ? "Указана несуществующая категория" : null;
 }
 
 /**
- * Verifies the uniqueness of the email among existing users
+ * Checks whether an email address is already used.
  *
- * @param array|null $users_by_email User information by email
+ * @param array|null $users_by_email Existing user data
  *
- * @return string|null Error message or null
+ * @return string|null Error message or null if valid
  */
 function validateUniqueEmail(?array $users_by_email): ?string
 {
-    if ($users_by_email) {
-        return "Указанный email уже используется другим пользователем";
-    }
-    return null;
+    return $users_by_email ? "Указанный email уже используется другим пользователем" : null;
 }
 
 /**
- * Checks the correctness of the email format
+ * Validates email format.
  *
- * @param string $email
+ * @param string $email Email address to validate
  *
- * @return string|null Error message or null
+ * @return string|null Error message or null if valid
  */
 function validateEmailFormat(string $email): ?string
 {
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        return "Некорректный email";
-    }
-    return null;
+    return !filter_var($email, FILTER_VALIDATE_EMAIL) ? "Некорректный email" : null;
 }
 
 /**
- * Only letters and numbers are allowed in the password
+ * Validates user password requirements.
  *
- * @param string $password
+ * Checks password characters and required
+ * lowercase letters, uppercase letters and digits.
  *
- * @return string|null Error message or null
+ * @param string $password Password value
+ *
+ * @return string|null Error message or null if valid
  */
 function validatePassword(string $password): ?string
 {
+    $error_message = null;
+
     if (!preg_match("/^[a-zA-Z\d]+$/", $password)) {
-        return "Разрешены только буквы и цифры";
+        $error_message = "Разрешены только буквы и цифры";
+    } elseif (!preg_match("/[a-z]/", $password)) {
+        $error_message = "Пароль должен содержать хотя бы одну строчную букву";
+    } elseif (!preg_match("/[A-Z]/", $password)) {
+        $error_message = "Пароль должен содержать хотя бы одну заглавную букву";
+    } elseif (!preg_match("/\d/", $password)) {
+        $error_message = "Пароль должен содержать хотя бы одну цифру";
     }
 
-    if (!preg_match("/[a-z]/", $password)) {
-        return "Пароль должен содержать хотя бы одну строчную букву";
-    }
-
-    if (!preg_match("/[A-Z]/", $password)) {
-        return "Пароль должен содержать хотя бы одну заглавную букву";
-    }
-
-    if (!preg_match("/\d/", $password)) {
-        return "Пароль должен содержать хотя бы одну цифру";
-    }
-    return null;
+    return $error_message;
 }
 
 /**
- * User name validation
+ * Validates user name format.
  *
- * @param string $name
+ * Allows only letters, spaces and hyphens.
  *
- * @return string|null Error message or null
+ * @param string $name User name
+ *
+ * @return string|null Error message or null if valid
  */
 function validateName(string $name): ?string
 {
-    if (!preg_match("/^[\p{L}\- ]+$/u", $name)) {
-        return "Некорректное имя пользователя";
-    }
-    return null;
+    return !preg_match("/^[\p{L}\- ]+$/u", $name) ? "Некорректное имя пользователя" : null;
 }
 
 /**
- * Checks whether a user with the specified email exists
+ * Checks whether a user exists.
  *
- * @param array|null $user User information by email
+ * @param array|null $user User data
  *
- * @return string|null Error message or null
+ * @return string|null Error message or null if valid
  */
 function validateUserExists(?array $user): ?string
 {
-    if ($user === null) {
-        return "Пользователя с таким email не существует";
-    }
-    return null;
+    return $user === null ? "Пользователя с таким email не существует" : null;
 }
 
 /**
- * Verifies whether the entered password matches the user's password hash
+ * Checks whether the entered password matches the stored password hash.
  *
- * @param array|null $user User information by email
- * @param array|null $form_data The form's data array
+ * @param array|null $user User data
+ * @param array $form_data Submitted form data
  *
- * @return string|null Error message or null
+ * @return string|null Error message or null if valid
  */
 function validateUserPassword(?array $user, array $form_data): ?string
 {
-    if (isset($user)) {
-        if (!password_verify($form_data[PASSWORD_FIELD], $user['password_hash'])) {
-            return "Указан неверный пароль";
-        }
-    }
-    return null;
+    return isset($user)
+        && !password_verify($form_data[PASSWORD_FIELD], $user['password_hash'])
+        ? "Указан неверный пароль"
+        : null;
 }

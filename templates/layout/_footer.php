@@ -8,14 +8,10 @@
     <nav class="nav">
         <ul class="nav__list container">
 
-        <?= include_template('_partials/nav.php', array_merge(
-            [
-                'mode' => 'footer'
-            ],
-            compact(
-                'categories'
-            )
-        )); ?>
+            <?= include_template('_partials/nav.php', [
+                'mode'       => 'footer',
+                'categories' => $categories
+            ]); ?>
 
         </ul>
     </nav>

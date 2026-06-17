@@ -24,7 +24,7 @@
     autocomplete="off"
 >
     <h2>Вход</h2>
-    <?php $input_name = 'email'; ?>
+    <?php $input_name = 'user_email'; ?>
     <div class="form__item<?= isset($errors[$input_name]) ? ' form__item--invalid' : '' ?>">
         <label for="<?= $input_name ?>">E-mail <sup>*</sup></label>
         <input
@@ -36,7 +36,7 @@
         >
         <span class="form__error"><?= $errors[$input_name] ?? '' ?></span>
     </div>
-    <?php $input_name = 'password'; ?>
+    <?php $input_name = 'user_password'; ?>
     <div class="form__item form__item--last<?= isset($errors[$input_name]) ? ' form__item--invalid' : '' ?>">
         <label for="<?= $input_name ?>">Пароль <sup>*</sup></label>
         <input

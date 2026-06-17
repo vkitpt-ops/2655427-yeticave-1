@@ -24,7 +24,7 @@
 
 <div class="container">
     <section class="lots">
-        <h2>Все лоты в категории <span>«<?= $category_name['name'] ?>»</span></h2>
+        <h2>Все лоты в категории <span>«<?= $category_name['name'] ?? '' ?>»</span></h2>
         <ul class="lots__list">
 
             <?php foreach ($category_lots as $lot): ?>
@@ -34,6 +34,7 @@
         </ul>
     </section>
 
+    <?php if (isset($pagination['total_pages']) && $pagination['total_pages'] > 1): ?>
     <ul class="pagination-list">
 
         <?= include_template('_partials/pagination.php',
@@ -44,4 +45,6 @@
             )) ?>
 
     </ul>
+    <?php endif; ?>
+
 </div>

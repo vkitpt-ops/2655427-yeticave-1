@@ -23,20 +23,28 @@
 <div class="container">
     <section class="lots">
 
-        <?php if (!empty($found_lots)): ?>
-            <h2>Результаты поиска по запросу «<span><?= $search_value ?></span>»</h2>
-        <?php else: ?>
-            <h2>Ничего не найдено по вашему запросу</h2>
-        <?php endif; ?>
+        <h2>Результаты поиска
+            <?php if (!empty($search_value)): ?>
+                по запросу «<span><?= $search_value ?></span>»
+            <?php endif; ?>
+        </h2>
 
         <ul class="lots__list">
 
-            <?php foreach ($found_lots as $lot): ?>
-                <?= include_template('_partials/lot-card.php', compact('lot')) ?>
-            <?php endforeach; ?>
+            <?php if (!empty($found_lots)): ?>
+
+                <?php foreach ($found_lots as $lot): ?>
+                    <?= include_template('_partials/lot-card.php', compact('lot')) ?>
+                <?php endforeach; ?>
+
+            <?php else: ?>
+                <p>Ничего не найдено по вашему запросу</p>
+            <?php endif; ?>
 
         </ul>
     </section>
+
+    <?php if (isset($pagination['total_pages']) && $pagination['total_pages'] > 1): ?>
     <ul class="pagination-list">
 
         <?= include_template('_partials/pagination.php',
@@ -47,4 +55,6 @@
             )) ?>
 
     </ul>
+    <?php endif; ?>
+
 </div>

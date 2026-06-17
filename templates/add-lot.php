@@ -48,7 +48,7 @@
                 <?php endforeach; ?>
 
             </select>
-            <span class="form__error"><?= $errors[$input_name] ?? ''?></span>
+            <span class="form__error"><?= $errors[$input_name] ?? '' ?></span>
         </div>
     </div>
     <?php $input_name = 'lot_description'; ?>
@@ -57,8 +57,8 @@
         <textarea
             id="<?= $input_name ?>"
             name="<?= $input_name ?>"
-            placeholder="Напишите описание лота"><?=htmlspecialchars($form_data[$input_name] ?? '') ?></textarea>
-        <span class="form__error"><?= $errors[$input_name] ?? ''?></span>
+            placeholder="Напишите описание лота"><?= esc($form_data[$input_name] ?? '') ?></textarea>
+        <span class="form__error"><?= $errors[$input_name] ?? '' ?></span>
     </div>
     <?php $input_name = 'lot_img'; ?>
     <div class="form__item form__item--file<?= isset($errors[$input_name]) ? ' form__item--invalid' : '' ?>">
@@ -75,8 +75,8 @@
             <span class="form__error"><?= $errors[$input_name] ?? '' ?></span>
         </div>
     </div>
-    <?php $input_name = 'lot_start_price'; ?>
     <div class="form__container-three">
+        <?php $input_name = 'lot_start_price'; ?>
         <div class="form__item form__item--small<?= isset($errors[$input_name]) ? ' form__item--invalid' : '' ?>">
             <label for="<?= $input_name ?>">Начальная цена <sup>*</sup></label>
             <input

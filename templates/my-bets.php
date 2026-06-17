@@ -35,7 +35,7 @@
                     <h3 class="rates__title">
                         <a href="lot.php?id=<?= esc($bid['lot_id'] ?? '') ?>"><?= esc($bid['title'] ?? '') ?></a>
 
-                        <?php if (in_array($bid['id'], $winner_bid)):?>
+                        <?php if (in_array($bid['id'], $winner_bid)): ?>
                             <p><?= esc($bid['contact_info'] ?? '') ?></p>
                         <?php endif; ?>
 
@@ -50,7 +50,7 @@
 
                     <?php if ($bid['expire_date'] < date('Y-m-d H:i:s')): ?>
 
-                        <?php if (in_array($bid['id'], $winner_bid)):?>
+                        <?php if (in_array($bid['id'], $winner_bid)): ?>
                             <div class="timer timer--win">Ставка выиграла</div>
                         <?php else: ?>
                             <div class="timer timer--end">Торги окончены</div>
@@ -64,10 +64,10 @@
 
                 </td>
                 <td class="rates__price">
-                    <?= formatPrice($bid['amount']) ?>
+                    <?= formatPrice($bid['amount'] ?? 0) ?>
                 </td>
                 <td class="rates__time">
-                    <?= getTimeAgo($bid['created_at']) ?>
+                    <?= getTimeAgo($bid['created_at'] ?? '') ?>
                 </td>
             </tr>
         <?php endforeach; ?>

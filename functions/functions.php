@@ -3,11 +3,14 @@
 declare(strict_types=1);
 
 /**
- * Escapes HTML characters for safe string output
+ * Escapes HTML special characters for safe output.
  *
- * @param string $value
+ * Prevents HTML injection by converting special characters
+ * into HTML entities.
  *
- * @return string
+ * @param string $value String to escape
+ *
+ * @return string Escaped string
  */
 function esc(string $value): string
 {
@@ -15,11 +18,13 @@ function esc(string $value): string
 }
 
 /**
- * Formats the price for display, round up the value
+ * Formats a price for display.
  *
- * @param float $price
+ * Rounds the value up and adds the currency symbol.
  *
- * @return string
+ * @param float $price Price value
+ *
+ * @return string Formatted price
  */
 function formatPrice(float $price): string
 {
@@ -31,14 +36,19 @@ function formatPrice(float $price): string
 }
 
 /**
- * Calculates the remaining time until the specified date
+ * Calculates the remaining time until a specified date.
  *
- * @param string $value
+ * Returns the remaining time as an array containing hours and minutes.
  *
- * @return array
+ * @param string $value Target date and time
+ *
+ * @return array Remaining time in hours and minutes
  */
 function getRemainingTime(string $value): array
 {
+    $hours = 0;
+    $minutes = 0;
+
     if (!empty($value)) {
         $now = new DateTime();
         $future = new DateTime($value);
@@ -49,24 +59,25 @@ function getRemainingTime(string $value): array
 
         $hours = intdiv($total_minutes, MINUTES_IN_HOUR);
         $minutes = $total_minutes % MINUTES_IN_HOUR;
-
-        return [$hours, $minutes];
     }
-    return [0, 0];
+
+    return [$hours, $minutes];
 }
 
 /**
- * Calculates pagination data for SQL queries and UI.
+ * Calculates pagination parameters.
  *
- * @param int $per_page        Number of items per page
- * @param int $page            Current page number (1-based)
- * @param int $total_elements  Total number of items in dataset
+ * Returns total pages, current page and SQL offset values.
  *
- * @return array
+ * @param int $per_page Number of items per page
+ * @param int $page Current page number
+ * @param int $total_elements Total number of items
+ *
+ * @return array Pagination data
  */
 function getPaginationData(int $per_page, int $page, int $total_elements): array
 {
-    $total_pages = (int)ceil($total_elements / $per_page);
+    $total_pages = (int) ceil($total_elements / $per_page);
     $page = max(1, min($page, max(1, $total_pages)));
 
     return [
@@ -77,10 +88,12 @@ function getPaginationData(int $per_page, int $page, int $total_elements): array
 }
 
 /**
- * Builds a URL query string for pagination with preserved filters.
+ * Builds a URL query string for pagination.
  *
- * @param array $query       Existing query parameters
- * @param int   $pageNumber  Target page number to set in URL
+ * Preserves existing query parameters and updates the page number.
+ *
+ * @param array $query Existing query parameters
+ * @param int $pageNumber Page number to add to the URL
  *
  * @return string Generated query string
  */
@@ -92,19 +105,14 @@ function buildUrl(array $query, int $pageNumber): string
 }
 
 /**
- * Returns a human-readable representation of the past time
- * relative to the passed date/time
+ * Returns a human-readable relative time.
  *
- * Examples:
- * - "только что" (если прошло меньше 60 секунд)
- * - "5 минут назад"
- * - "2 часа назад"
- * - "вчера"
- * - "3 дня назад"
+ * Converts a date and time into a relative format:
+ * "just now", "5 minutes ago", "yesterday", etc.
  *
- *  @param string $datetime Date and time in a format understood by strtotime (Y-m-d H:i:s)
+ * @param string $datetime Date and time string
  *
- * @return string Relative time (for example: "5 minutes ago")
+ * @return string Relative time representation
  */
 function getTimeAgo(string $datetime): string
 {
@@ -113,20 +121,20 @@ function getTimeAgo(string $datetime): string
 
     $result = '';
 
-    if ($diff < 60) {
+    if ($diff < SECONDS_IN_MINUTE) {
         $result = 'только что';
-    } elseif ($diff < 3600) {
-        $minutes = intdiv($diff, 60);
+    } elseif ($diff < SECONDS_IN_HOUR) {
+        $minutes = intdiv($diff, SECONDS_IN_MINUTE);
         $result = $minutes . ' '
             . get_noun_plural_form($minutes, 'минута', 'минуты', 'минут')
             . ' назад';
-    } elseif ($diff < 86400) {
-        $hours = intdiv($diff, 3600);
+    } elseif ($diff < SECONDS_IN_DAY) {
+        $hours = intdiv($diff, SECONDS_IN_HOUR);
         $result = $hours . ' '
             . get_noun_plural_form($hours, 'час', 'часа', 'часов')
             . ' назад';
     } else {
-        $days = intdiv($diff, 86400);
+        $days = intdiv($diff, SECONDS_IN_DAY);
 
         $result = $days === 1
             ? 'вчера'

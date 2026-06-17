@@ -32,15 +32,15 @@ if ($_SERVER['REQUEST_METHOD'] === HttpMethodEnum::POST->value) {
     validateFormData(VALIDATION_RULES[ADD_BID_FORM_KEY], $form_data, $errors);
 
     if (empty($errors)) {
-        if ((int)$form_data['cost'] < $min_bid) {
-            $errors['cost'] = "Минимальная ставка: $min_bid";
+        if (intval($form_data['bid_cost'] ?? 0) < $min_bid) {
+            $errors['bid_cost'] = "Минимальная ставка: $min_bid";
         }
     }
 
     $errors = array_filter($errors);
 
     if (empty($errors)) {
-        $data = prepareBidData($auth_user['id'], $lot_id, $form_data);
+        $data = prepareBidData($auth_user['id'] ?? 0, $lot_id, $form_data);
         $bid = addBid($connection, $data);
 
         if ($bid) {

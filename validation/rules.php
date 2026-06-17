@@ -35,40 +35,40 @@ const VALIDATION_RULES = [
         ]
     ],
     SIGN_UP_FORM_KEY => [
-        'email' => [
+        'user_email' => [
             'required',
             'string:min=4&max=128',
             'email',
             'unique_email'
         ],
-        'name' => [
+        'user_name' => [
             'required',
             'string:min=4&max=128',
             'name:filter'
         ],
-        'password' => [
+        'user_password' => [
             'required',
             'string:min=8&max=255',
             'password'
         ],
-        'message' => [
+        'user_contact_info' => [
             'required',
             'string:min=5'
         ]
     ],
     LOGIN_FORM_KEY => [
-        'email' => [
+        'user_email' => [
             'required',
             'email',
             'user_exists'
         ],
-        'password' => [
+        'user_password' => [
             'required',
             'password_match'
         ]
     ],
     ADD_BID_FORM_KEY => [
-        'cost' => [
+        'bid_cost' => [
             'required',
             'int'
         ]

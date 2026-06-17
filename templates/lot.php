@@ -1,13 +1,12 @@
 <?php
 
-/** @var int $min_bid */
 /** @var array $auth_user */
 /** @var array $categories */
-/** @var array $errors */
 /** @var array|null $lot */
 /** @var array|null $bids */
 /** @var array|null $last_bid */
-
+/** @var array $errors */
+/** @var int $min_bid */
 
 ?>
 
@@ -44,7 +43,7 @@
         <div class="lot-item__right">
             <div class="lot-item__state">
 
-                <?php [$hours, $minutes] = getRemainingTime(esc($lot['expire_date'] ?? '')); ?>
+                <?php [$hours, $minutes] = getRemainingTime($lot['expire_date'] ?? ''); ?>
 
                 <div class="lot-item__timer timer<?= $hours < 1 ? ' timer--finishing' : '' ?> ">
                     <?= sprintf('%02d:%02d', $hours, $minutes) ?>
@@ -60,26 +59,26 @@
                 </div>
 
                 <?php if (
-                    $auth_user['id'] !== null
-                    && $auth_user['id'] !== ($lot['author_id'] ?? null)
-                    && ($last_bid['user_id'] ?? null) !== $auth_user['id']
+                    !empty($auth_user['id'])
+                    && !empty($lot['author_id'])
+                    && $auth_user['id'] !== $lot['author_id']
+                    && $auth_user['id'] !== ($last_bid['user_id'] ?? null)
                 ): ?>
 
                     <form
                         class="lot-item__form"
-                        action="lot.php?id=<?= $lot['id'] ?>"
+                        action="lot.php?id=<?= $lot['id'] ?? '' ?>"
                         method="post"
                         autocomplete="off"
                     >
-                        <?php $input_name = 'cost'; ?>
+                        <?php $input_name = 'bid_cost'; ?>
                         <p class="lot-item__form-item form__item<?= !empty($errors) ? ' form__item--invalid' : '' ?>">
                             <label for="<?= $input_name ?>">Ваша ставка</label>
-                                <input id="<?= $input_name ?>"
-                                    type="number"
-                                    name="<?= $input_name ?>"
-                                    placeholder="<?= formatPrice($min_bid) ?>"
-                                >
-                                <span class="form__error"><?= $errors[$input_name] ?? '' ?></span>
+                            <input id="<?= $input_name ?>"
+                                type="number"
+                                name="<?= $input_name ?>"
+                                placeholder="<?= formatPrice($min_bid) ?>">
+                            <span class="form__error"><?= $errors[$input_name] ?? '' ?></span>
                         </p>
                         <button type="submit" class="button">Сделать ставку</button>
                     </form>
@@ -87,20 +86,24 @@
                 <?php endif; ?>
 
             </div>
-            <div class="history">
-                <h3>История ставок (<span><?= count($bids) ?></span>)</h3>
-                <table class="history__list">
 
-                    <?php foreach ($bids as $bid): ?>
-                        <tr class="history__item">
-                            <td class="history__name"><?= $bid['user_name'] ?></td>
-                            <td class="history__price"><?= formatPrice($bid['amount']) ?></td>
-                            <td class="history__time"><?= getTimeAgo($bid['created_at']) ?></td>
-                        </tr>
-                    <?php endforeach; ?>
+            <?php $bids_count = is_array($bids) ? count($bids) : 0; ?>
+            <?php if ($bids_count > 0): ?>
+                <div class="history">
+                    <h3>История ставок (<span><?= $bids_count ?></span>)</h3>
+                    <table class="history__list">
 
-                </table>
-            </div>
+                        <?php foreach ($bids as $bid): ?>
+                            <tr class="history__item">
+                                <td class="history__name"><?= esc($bid['user_name'] ?? '') ?></td>
+                                <td class="history__price"><?= formatPrice($bid['amount'] ?? '') ?></td>
+                                <td class="history__time"><?= getTimeAgo($bid['created_at'] ?? '') ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+
+                    </table>
+                </div>
+            <?php endif; ?>
         </div>
     </div>
 </section>

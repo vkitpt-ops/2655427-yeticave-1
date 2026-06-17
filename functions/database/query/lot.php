@@ -3,11 +3,13 @@
 declare(strict_types=1);
 
 /**
- * Get the newest open lots
+ * Retrieves the newest active lots.
+ *
+ * Returns the latest lots that have not expired.
  *
  * @param mysqli $connection Active database connection
  *
- * @return array
+ * @return array List of newest lots
  */
 function getNewLots(mysqli $connection): array
 {
@@ -28,46 +30,48 @@ function getNewLots(mysqli $connection): array
 }
 
 /**
- * Get information about a lot by id
+ * Retrieves a lot by its ID.
  *
  * @param mysqli $connection Active database connection
- * @param int    $id
+ * @param int $id Lot ID
  *
- * @return array|null
+ * @return array|null Lot data or null if not found
  */
 function getLotById(mysqli $connection, int $id): ?array
 {
-    if ($id === 0) {
-        return null;
+    $lot = null;
+
+    if ($id > 0) {
+        $sql = "SELECT
+            lot.id,
+            lot.title,
+            lot.description,
+            lot.start_price,
+            COALESCE(MAX(bid.amount), lot.start_price) AS current_price,
+            lot.bid_step,
+            lot.img_url,
+            category.name AS category_name,
+            lot.expire_date,
+            lot.author_id
+        FROM `lot`
+        LEFT JOIN `bid` ON bid.lot_id = lot.id
+        JOIN `category` ON category.id = lot.category_id
+        WHERE lot.id = ?
+        GROUP BY lot.id";
+
+        $lot = fetchOne($connection, $sql, 'i', [$id]);
     }
 
-    $sql = "SELECT
-        lot.id,
-        lot.title,
-        lot.description,
-        lot.start_price,
-        COALESCE(MAX(bid.amount), lot.start_price) AS current_price,
-        lot.bid_step,
-        lot.img_url,
-        category.name AS category_name,
-        lot.expire_date,
-        lot.author_id
-    FROM `lot`
-    LEFT JOIN `bid` ON bid.lot_id = lot.id
-    JOIN `category` ON category.id = lot.category_id
-    WHERE lot.id = ?
-    GROUP BY lot.id";
-
-    return fetchOne($connection, $sql, 'i', [$id]);
+    return $lot;
 }
 
 /**
- * Returns the number of active lots for a given category slug.
+ * Retrieves the number of active lots in a category.
  *
- * @param mysqli      $connection     Active database connection
- * @param string|null $category_slug  Category slug (can be null)
+ * @param mysqli $connection Active database connection
+ * @param string|null $category_slug Category slug
  *
- * @return int Number of lots matching the category filter
+ * @return int Number of matching lots
  */
 function getLotsCountByCategorySlug(mysqli $connection, ?string $category_slug): int
 {
@@ -85,14 +89,14 @@ function getLotsCountByCategorySlug(mysqli $connection, ?string $category_slug):
 }
 
 /**
- * Get all lots by category
+ * Retrieves active lots by category.
  *
- * @param mysqli      $connection     Active database connection
- * @param string|null $category_slug  Category slug (can be null)
- * @param int         $limit
- * @param int         $offset
+ * @param mysqli $connection Active database connection
+ * @param string|null $category_slug Category slug
+ * @param int $limit Maximum number of results
+ * @param int $offset Number of records to skip
  *
- * @return array
+ * @return array List of lots
  */
 function getLotsByCategorySlug(mysqli $connection, ?string $category_slug, int $limit, int $offset): array
 {
@@ -116,12 +120,12 @@ function getLotsByCategorySlug(mysqli $connection, ?string $category_slug, int $
 }
 
 /**
- * Gets the total number of lots found by a search query
+ * Retrieves the total number of lots matching a search query.
  *
  * @param mysqli $connection Active database connection
- * @param string $value      Search query string
+ * @param string $value Search query
  *
- * @return int
+ * @return int Number of matching lots
  */
 function getLotsCountBySearch(mysqli $connection, string $value): int
 {
@@ -137,12 +141,14 @@ function getLotsCountBySearch(mysqli $connection, string $value): int
 }
 
 /**
- * Gets lots by search query using full-text search
+ * Retrieves lots matching a search query.
+ *
+ * Uses full-text search by lot title and description.
  *
  * @param mysqli $connection Active database connection
- * @param string $value      Search query string
- * @param int    $limit
- * @param int    $offset
+ * @param string $value Search query
+ * @param int $limit Maximum number of results
+ * @param int $offset Number of records to skip
  *
  * @return array List of found lots
  */
@@ -165,15 +171,16 @@ function getAllLotsBySearch(mysqli $connection, string $value, int $limit, int $
 }
 
 /**
- * Adding lot data from the form to the database
+ * Creates a new lot and inserts it into the database.
  *
  * @param mysqli $connection Active database connection
- * @param array  $data       Associative array of lot data for insertion
+ * @param array $data Lot data for insertion
  *
- * @return string|int|null
+ * @return int|null Created lot ID or null on failure
  */
-function addLot(mysqli $connection, array $data): string|int|null
+function addLot(mysqli $connection, array $data): int|null
 {
+    $lot_id = null;
     $sql = "INSERT INTO lot (
         title,
         description,
@@ -186,8 +193,10 @@ function addLot(mysqli $connection, array $data): string|int|null
     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
     $stmt = db_get_prepare_stmt($connection, $sql, $data);
+
     if (mysqli_stmt_execute($stmt)) {
-        return mysqli_insert_id($connection);
+        $lot_id = mysqli_insert_id($connection);
     }
-    return null;
+
+    return $lot_id;
 }

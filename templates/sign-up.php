@@ -24,8 +24,8 @@
     autocomplete="off"
 >
     <h2>Регистрация нового аккаунта</h2>
-    <?php $input_name = 'email'; ?>
-    <div class="form__item<?= isset($errors['email']) ? ' form__item--invalid' : '' ?>">
+    <?php $input_name = 'user_email'; ?>
+    <div class="form__item<?= isset($errors[$input_name]) ? ' form__item--invalid' : '' ?>">
         <label for="<?= $input_name ?>">E-mail <sup>*</sup></label>
         <input
             id="<?= $input_name ?>"
@@ -36,7 +36,7 @@
         >
         <span class="form__error"><?= $errors[$input_name] ?? '' ?></span>
     </div>
-    <?php $input_name = 'password'; ?>
+    <?php $input_name = 'user_password'; ?>
     <div class="form__item<?= isset($errors[$input_name]) ? ' form__item--invalid' : '' ?>">
         <label for="<?= $input_name ?>">Пароль <sup>*</sup></label>
         <input
@@ -48,7 +48,7 @@
         >
         <span class="form__error"><?= $errors[$input_name] ?? '' ?></span>
     </div>
-    <?php $input_name = 'name'; ?>
+    <?php $input_name = 'user_name'; ?>
     <div class="form__item<?= isset($errors[$input_name]) ? ' form__item--invalid' : '' ?>">
         <label for="<?= $input_name ?>">Имя <sup>*</sup></label>
         <input
@@ -60,7 +60,7 @@
         >
         <span class="form__error"><?= $errors[$input_name] ?? '' ?></span>
     </div>
-    <?php $input_name = 'message'; ?>
+    <?php $input_name = 'user_contact_info'; ?>
     <div class="form__item<?= isset($errors[$input_name]) ? ' form__item--invalid' : '' ?>">
         <label for="<?= $input_name ?>">Контактные данные <sup>*</sup></label>
         <textarea

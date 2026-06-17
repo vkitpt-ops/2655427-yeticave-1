@@ -10,18 +10,23 @@ use Symfony\Component\Mime\Email;
 require_once dirname(__DIR__) . '/vendor/autoload.php';
 
 /**
-* Sends an email message
-*
-* @param string $dsn
-* @param string $to
-* @param string $from
-* @param string $subject
-* @param string $body
-* @throws TransportExceptionInterface
-*/
-function sendEmail(string $dsn, string $to, string $from, string $subject, string $body ): void
+ * Sends an email message.
+ *
+ * Creates and sends an email using the configured mail transport.
+ *
+ * @param string $dsn Mail transport DSN
+ * @param string $to Recipient email address
+ * @param string $from Sender email address
+ * @param string $subject Email subject
+ * @param string $body Email HTML content
+ *
+ * @throws TransportExceptionInterface If sending the email fails
+ *
+ * @return void
+ */
+function sendEmail(string $dsn, string $to, string $from, string $subject, string $body): void
 {
-    $transport = Transport:: fromDsn ($dsn) ;
+    $transport = Transport::fromDsn($dsn);
 
     $email = new Email();
     $email->to($to);
@@ -34,12 +39,14 @@ function sendEmail(string $dsn, string $to, string $from, string $subject, strin
 }
 
 /**
-* Builds SMTP DSN from config
-*
-* @param array $smtp
-*
-* @return string
-*/
+ * Builds a SMTP DSN string from configuration data.
+ *
+ * Creates a connection string required by the mail transport.
+ *
+ * @param array $smtp SMTP configuration parameters
+ *
+ * @return string SMTP DSN
+ */
 function buildDsn(array $smtp): string
 {
     $host = $smtp['host'] ?? '';
@@ -53,8 +60,8 @@ function buildDsn(array $smtp): string
 
     return sprintf(
         'smtp://%s:%s@%s:%d?encryption=tls&auth_mode=login',
-        urlencode ($user),
-        urlencode ($password) ,
+        urlencode($user),
+        urlencode($password),
         $host,
         $port
     );

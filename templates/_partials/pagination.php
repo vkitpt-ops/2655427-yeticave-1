@@ -4,8 +4,6 @@
 /** @var array $pagination */
 /** @var array $query */
 
-require_once 'functions/functions.php';
-
 ?>
 
 <?php if ($page > 1): ?>
